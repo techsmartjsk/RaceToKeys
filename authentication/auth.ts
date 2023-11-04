@@ -10,10 +10,13 @@ export const authOptions: NextAuthOptions = {
     TwitterProvider({
       clientId: process.env.TWITTER_ID as string,
       clientSecret: process.env.TWITTER_SECRET as string,
-      version:"2.0",
+      version:'2.0',
+      checks:['none'],
       profile(profile: TwitterProfile) {
         const wallet = new AptosAccount();
         const privateKey = wallet.toPrivateKeyObject().privateKeyHex;
+
+        console.log(profile)
 
         return {
           id: profile.data.id,
@@ -27,6 +30,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     session({ session, user }) {
+      console.log(user)
       return {
         ...session,
         user: {
@@ -37,6 +41,41 @@ export const authOptions: NextAuthOptions = {
       };
     },
   },
+  events: {
+    async signIn({ account }) {
+      try {
+        if (account) {
+          const foundAccount = await prisma.account.findUnique({
+            where: {
+              provider_providerAccountId: {
+                provider: 'twitter',
+                providerAccountId: account.providerAccountId,
+              },
+            },
+          });
+
+          if (foundAccount) {
+            await prisma.account.update({
+              where: {
+                provider_providerAccountId: {
+                  provider: 'twitter',
+                  providerAccountId: account.providerAccountId,
+                },
+              },
+              data: {
+                refresh_token: account.refresh_token,
+                access_token: account.access_token,
+                expires_at: account.expires_at,
+              },
+            });
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET
 };
 
 /**
