@@ -8,7 +8,7 @@ export const LoginWithXButton = () => {
   return (
     <button
       className='flex w-full flex-row items-center justify-center space-x-3 rounded-xl bg-[#26a7de] px-9 py-3 font-matter text-white hover:bg-[#51b9e5]'
-      onClick={() => signIn()}
+      onClick={() => signIn('twitter')}
     >
       <Image
         src='/twitter.svg'
