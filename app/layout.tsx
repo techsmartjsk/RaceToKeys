@@ -18,11 +18,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(authOptions);
-
   if(!session){
-    return <>
-    {children}
-    </>
+    return <html lang="en">
+      <body className={inter.className}>
+        {children}
+      </body>
+    </html>
   }
 
   return (
