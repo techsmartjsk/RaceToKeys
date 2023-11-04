@@ -1,0 +1,50 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  username   String    @unique
+  publicKey  String
+  privateKey String
+  userInfo   UserInfo?
+  Account    Account?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @unique @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
+
+model UserInfo {
+  id        String  @id @default(cuid())
+  userId    String  @unique @map("user_id")
+  name      String
+  imgSrc    String?
+  followers Int?
+  following Int?
+  user      User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
