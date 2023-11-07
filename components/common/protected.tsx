@@ -1,7 +1,7 @@
 import { authOptions } from '@/authentication/auth';
 import { getServerSession } from 'next-auth';
 import React from 'react';
-import { LoginWithXButton } from '../auth/login';
+import { LoginPage } from '../auth/login.page';
 
 export const Protected = async ({
   children,
@@ -10,7 +10,7 @@ export const Protected = async ({
 }) => {
   const session = await getServerSession(authOptions);
 
-  if (!session) return <LoginWithXButton />;
+  if (!session) return <LoginPage />;
 
   return <>{children}</>;
 };

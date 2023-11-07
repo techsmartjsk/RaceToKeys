@@ -3,7 +3,7 @@
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 
-export const LoginWithXButton = () => {
+export const LoginButton = () => {
   return (
     <button
       className='flex w-full flex-row items-center justify-center space-x-3 rounded-xl bg-[#26a7de] px-9 py-3 font-matter text-white hover:bg-[#51b9e5]'
