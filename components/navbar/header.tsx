@@ -2,6 +2,7 @@
 
 import { signOut } from 'next-auth/react'
 import { AiOutlineLogout } from 'react-icons/ai'
+import { toast } from 'react-toastify'
 
 export const Header = () =>{
     return(
@@ -16,6 +17,7 @@ export const Header = () =>{
                     <li>Leaderboard</li>
                     <li className='flex items-center gap-1 cursor-pointer' onClick={()=>{
                         signOut();
+                        toast.success("Logged out successfully!")
                     }}>
                         <p>Logout</p>
                         <AiOutlineLogout size={'20px'}/>
