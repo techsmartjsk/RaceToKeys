@@ -6,6 +6,7 @@ import { authOptions } from '@/authentication/auth'
 import { Suspense } from 'react'
 import Loading from './loading'
 import { Poppins } from 'next/font/google'
+import { Homepage } from '@/components/home/homepage'
 
 export const metadata: Metadata = {
   title: 'Network',
@@ -37,7 +38,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={poppins.className}>
         <Suspense fallback={<Loading/>}>
-          <Sidebar/>
+          <Homepage/>
         </Suspense>
       </body>
     </html>
