@@ -1,7 +1,7 @@
 "use client"
 
-import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory, getKeySubjects } from "@/lib/contract";
-import { ContractGetOwnedCollectionsResponse, ContractTradeEvent, Session } from "@/lib/types"
+import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory, getKeySubjects, getBuyPrice, getSellPrice, sellKeys, buyKeys, getSellPriceAfterFees, getBuyPriceAfterFees } from "@/lib/contract";
+import { ContractTradeEvent, Session } from "@/lib/types"
 import Image from "next/image"
 import { useState, useEffect } from "react";
 
@@ -52,7 +52,15 @@ const Hero = ({ session }: { session: Session }) => {
             );
             setKeyCollections(filteredKeys);
         }
-    };
+    }
+
+    const handleSellKeys = async (address:string, amount:number) =>{
+        await sellKeys(session.user, address, amount)
+    }
+
+    const handleBuyKeys = async (address: string, amount:number) =>{
+        await buyKeys(session.user,address,amount)
+    }
     
     return (
         <div className="px-20 py-10 w-full">
@@ -75,7 +83,38 @@ const Hero = ({ session }: { session: Session }) => {
                 width={400} 
                 height={400} 
                 alt="Keys not found"/>
-                    </div>:null
+                    </div>:<div className="rounded-md w-full shadow-md p-5 mt-5">
+                <div className="flex gap-10 border-b-[0.5px] border-black p-2">
+                    <p className="w-[10%]">Serial Number</p>
+                    <p className="w-[30%]">Address</p>
+                    <p className="w-[10%]">Keys</p>
+                    <p className="w-[10%]">Value</p>
+                    <p className="w-[10%]">Value(After Fees)</p>
+                    <p className="w-[10%]">Sell</p>
+                </div>
+                {
+                    ownedKeys.map((key,index)=>{
+                        return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
+                            <p className="w-[10%]">{index+1}</p>
+                            <p className="w-[30%]">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
+                            <p className="w-[10%]">{key.keys}</p>
+                            <p className="w-[10%]">{
+                                key.keys > 0 ? getSellPrice(key.address,key.keys):<p className="text-md">Not Applicable</p>
+                            }</p>
+                            <p className="w-[10%]">{
+                                key.keys > 0 ? getSellPriceAfterFees(key.address,key.keys):<p className="text-md">Not Applicable</p>
+                            }</p>
+                            <p className="w-[20%]">
+                                {
+                                    key.keys > 0 ? <button onClick={()=>{
+                                        handleSellKeys(key.address, key.keys)
+                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Sell Keys</button>:null
+                                }
+                            </p>
+                        </div>
+                    })
+                }
+            </div>
             }
 
             <h1 className="text-xl mt-20">Key Collections</h1>
@@ -88,7 +127,9 @@ const Hero = ({ session }: { session: Session }) => {
                     <p className="w-[10%]">Serial Number</p>
                     <p className="w-[30%]">Address</p>
                     <p className="w-[10%]">Keys</p>
-                    <p className="w-[30%]">Buy/Sell</p>
+                    <p className="w-[10%]">Value</p>
+                    <p className="w-[10%]">Value(After Fees)</p>
+                    <p className="w-[10%]">Buy</p>
                 </div>
                 {
                     keyCollections.map((key,index)=>{
@@ -96,9 +137,17 @@ const Hero = ({ session }: { session: Session }) => {
                             <p className="w-[10%]">{index+1}</p>
                             <p className="w-[30%]">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
                             <p className="w-[10%]">{key.keys}</p>
-                            <p className="w-[30%]">
+                            <p className="w-[10%]">{
+                                key.keys > 0 ? getBuyPrice(key.address,key.keys):<p className="text-md">Not Applicable</p>
+                            }</p>
+                            <p className="w-[10%]">{
+                                key.keys > 0 ? getBuyPriceAfterFees(key.address,key.keys):<p className="text-md">Not Applicable</p>
+                            }</p>
+                            <p className="w-[20%]">
                                 {
-                                    key.keys > 0 ? <button className="rounded-md p-2 text-white bg-[#30D5C8]">Buy</button>:null
+                                    key.keys > 0 ? <button onClick={()=>{
+                                        handleBuyKeys(key.address,key.keys)
+                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Buy Keys</button>:null
                                 }
                             </p>
                         </div>
