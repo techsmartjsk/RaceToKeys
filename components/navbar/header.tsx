@@ -17,7 +17,6 @@ export const Header = ({ session }: { session: Session }) => {
     };
 
     const handleDropdown = () =>{
-        console.log("Hi!")
         setShowDropdown(!showDropdown);
     }
 
