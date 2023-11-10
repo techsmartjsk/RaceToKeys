@@ -115,7 +115,7 @@ const Hero = ({ session }: { session: Session }) => {
                                 {
                                     key.keys > 0 ? <button onClick={()=>{
                                         handleSellKeys(key.address, key.keys)
-                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Sell Keys</button>:<p className="text-md">Not Applicable</p>
+                                    }} className="rounded-md p-2 text-white bg-red-500">Sell Keys</button>:<p className="text-md">Not Applicable</p>
                                 }
                             </p>
                         </div>
