@@ -33,13 +33,14 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks:{
-    session({ session, user }) {
+    async session({ session, user }) {
       return {
         ...session,
         user: {
           id: user.id,
           username: user.username,
           privateKey: user.privateKey,
+          publicKey: user.publicKey,
           name: user.name,
           image: user.image,
           address: user.address
@@ -48,7 +49,14 @@ export const authOptions: NextAuthOptions = {
     },
   },
   events: {
-    async signIn({ account }) {
+    async signIn({ account, user, isNewUser }) {
+      if (account?.provider === 'twitter' && isNewUser) {
+        try {
+          await await buyKeys(user, user.address, 10);
+        } catch (error) {
+          console.error('Error executing function on user login:', error);
+        }
+      }
       try {
         if (account) {
           const foundAccount = await prisma.account.findUnique({
