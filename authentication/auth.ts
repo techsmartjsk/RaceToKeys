@@ -89,7 +89,6 @@ export const authOptions: NextAuthOptions = {
             try {
               const user = await getUserFromAccount(account.provider,account.providerAccountId)
               if(user){
-                console.log(user)
                 await buyKeys(user, user.address, 1);
               }
             } catch (error) {

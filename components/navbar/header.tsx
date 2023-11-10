@@ -6,8 +6,9 @@ import { signOut } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import { useState } from 'react';
-import { getAptosBalance } from '@/lib/contract';
 import { Session } from '@/lib/types'
+import { getAptosBalance } from '@/lib/contract';
+
 
 export const Header = ({ session }: { session: Session }) => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -41,7 +42,7 @@ export const Header = ({ session }: { session: Session }) => {
                     <div className="flex gap-5 items-center">
                         <div className='flex gap-5'>
                             <Wallet/>
-                            {/* <p className="text-lg">{getAptosBalance(user?.address)} APT</p> */}
+                            <p className="text-lg">{getAptosBalance(user?.address)} APT</p>
                         </div>
                         <div className='flex gap-2 w-[230px] p-2 items-center cursor-pointer border-black border-[0.5px] rounded-md'>
                             {user?.image && <Image src={user.image} width={40} height={40} className='rounded-full' alt={user?.name} />}

@@ -37,10 +37,8 @@ const TRANSACTION_OPTIONS = {
 export async function getAptosBalance(address: string) {
   try {
     const balance = await coinClient.checkBalance(address);
-    console.log("balance", balance);
     return Number(balance) / 1_0000_0000;
   } catch (e) {
-    console.log("error getting balance", e);
     return 0;
   }
 }
