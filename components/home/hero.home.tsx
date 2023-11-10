@@ -4,6 +4,7 @@ import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage,
 import { ContractTradeEvent, Session } from "@/lib/types"
 import Image from "next/image"
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 type Collection = {
     address: string;
@@ -56,10 +57,16 @@ const Hero = ({ session }: { session: Session }) => {
 
     const handleSellKeys = async (address:string, amount:number) =>{
         await sellKeys(session.user, address, amount)
+        toast.success('Selling of keys has been initiated',{
+            position: toast.POSITION.BOTTOM_RIGHT
+        })
     }
 
     const handleBuyKeys = async (address: string, amount:number) =>{
         await buyKeys(session.user,address,amount)
+        toast.success('Buying of keys has been initiated',{
+            position: toast.POSITION.BOTTOM_RIGHT
+        })
     }
     
     return (
