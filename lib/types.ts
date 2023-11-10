@@ -1,14 +1,19 @@
 export type UserInfo = {
   username: string;
   name: string;
-  imgSrc?: string;
+  image: string;
   address: string;
 };
+
 
 export type User = UserInfo & {
   publicKey: string;
   privateKey: string;
 };
+
+export type Session = {
+  user: User
+}
 
 export type ContractTradeEvent = {
   version: number,

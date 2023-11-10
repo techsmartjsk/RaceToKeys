@@ -7,9 +7,9 @@ import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import { useState } from 'react';
 import { getAptosBalance } from '@/lib/contract';
-export type { Session } from 'next-auth';
+import { Session } from '@/lib/types'
 
-export const Header = ({ session }) => {
+export const Header = ({ session }: { session: Session }) => {
     const [showDropdown, setShowDropdown] = useState(true);
     const user = session?.user;
     const handleLogout = () => {
