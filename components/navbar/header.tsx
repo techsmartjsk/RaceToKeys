@@ -7,9 +7,8 @@ import { useState, useEffect } from 'react';
 import { Session } from '@/lib/types'
 import { getAptosBalance } from '@/lib/contract';
 
-
 export const Header = ({ session }: { session: Session }) => {
-    const [showDropdown, setShowDropdown] = useState(true);
+    const [showDropdown, setShowDropdown] = useState(false);
     const [searchByAddress, setSearchByAddress] = useState("")
     const user = session?.user;
     const [balance, setBalance] = useState(0);
