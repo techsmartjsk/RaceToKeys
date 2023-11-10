@@ -68,8 +68,10 @@ Finally, don’t forget to pay attention to the non-technical aspects of the app
 ## What to submit
 
 - [ ] The complete code for your app, key custody system, as well as anything built for the quest.
-- [ ] A URL to a live demo instance of your app (replace the placeholder URL with your demo URL): [https://race-to-keys.vercel.app/](https://race-to-keys.vercel.app/)
-- [ ] A short description of how you built your submission. We are looking for a description of the technologies you used, the reasoning behind your design decisions, and a general guideline to help us navigate your code. A brief summary is perfect, no more is needed!
+- [ ] A URL to a live demo instance of your app : [https://race-to-keys.vercel.app/](https://race-to-keys.vercel.app/)
+- [ ] I have built the entire system with creative and unique UI/UX using Lucide React Icon Library with Toast Library for alerts. 
+
+The database setup is a Supabase PostgreSQL for the Deployment.
 
 ## Submission Deadline
 
