@@ -1,7 +1,7 @@
 "use client"
 
 import { authOptions } from '@/authentication/auth';
-import { ChevronDown, ChevronUp, Wallet } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, ClipboardCopy, Wallet } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
@@ -20,6 +20,17 @@ export const Header = ({ session }: { session: Session }) => {
         console.log("Hi!")
         setShowDropdown(!showDropdown);
     }
+
+    const [copySuccess, setCopySuccess] = useState(false);
+
+    const copyToClipboard = async (text: string) => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopySuccess(!copySuccess);
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      };
 
     return (
         <div className="px-20 py-10 shadow-lg flex items-center justify-between">
@@ -42,13 +53,21 @@ export const Header = ({ session }: { session: Session }) => {
                         </div>
                     </div>
                     {showDropdown && (
-                        <div className="absolute w-[230px] top-full p-5 right-0 bg-white rounded-b-md border-l-[0.5px] border-r-[0.5px] border-b-[0.5px] border-black">
+                        <div className="absolute w-[230px] top-full p-4 right-0 bg-white rounded-b-md border-l-[0.5px] border-r-[0.5px] border-b-[0.5px] border-black">
                             <ul className='flex-col gap-5'>
-                                <li className="py-3 px-2">{user?.username}</li>
+                                <li className="py-3">{user?.username}</li>
                                 <hr></hr>
-                                <li className='py-3 px-2'>{user?.address.slice(0,4)}...{user?.address.slice(-4)}</li>
+                                <li className='py-3 flex gap-1'>
+                                    <p>{user?.address.slice(0,4)}...{user?.address.slice(-4)}</p>
+                                    <div onClick={()=>{
+                                        copyToClipboard(user?.address);
+                                    }} className="text-sm cursor-pointer border-[1px] flex gap-1 items-center w-[80px] rounded-md p-1 ml-auto">
+                                       { !copySuccess ? <ClipboardCopy size={'18px'}/> : <Check size={'18px'}/>} 
+                                        <p>Copy</p>
+                                    </div>
+                                </li>
                                 <hr></hr>
-                                <li onClick={handleLogout} className="cursor-pointer text-black py-3 px-2">Sign Out</li>
+                                <li onClick={handleLogout} className="cursor-pointer text-black py-3">Sign Out</li>
                             </ul>
                         </div>
                     )}
