@@ -9,7 +9,6 @@ import { getAptosBalance } from '@/lib/contract';
 
 export const Header = ({ session }: { session: Session }) => {
     const [showDropdown, setShowDropdown] = useState(false);
-    const [searchByAddress, setSearchByAddress] = useState("")
     const user = session?.user;
     const [balance, setBalance] = useState(0);
 
@@ -50,9 +49,6 @@ export const Header = ({ session }: { session: Session }) => {
             </div>
             <div className="relative">
                 <div className="flex gap-5 items-center">
-                    <input className="rounded-full p-2 border-[1px] w-[500px]" value={searchByAddress} onChange={(event)=>{
-                            setSearchByAddress(event?.target.value)
-                        }} placeholder='Search By Address'></input>
                     <div className='flex gap-5'>
                         <Wallet/>
                         <p className="text-lg">{balance.toFixed(2)} APT</p>
