@@ -1,13 +1,41 @@
+"use client"
+
 import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory } from "@/lib/contract";
 import { ContractGetOwnedCollectionsResponse, ContractTradeEvent, Session } from "@/lib/types"
 import Image from "next/image"
+import { useState, useEffect } from "react";
 
-const Hero = async ({ session }: { session: Session }) => {
-    const tradeHistory: ContractTradeEvent[] = await getTradeHistory();
-    const protocolPercentage = await getProtocolFeePercentage();
-    const subjectPercentage = await getSubjectFeePercentage();
-    const ownedKeys = await getOwnedCollections(session.user)
+type OwnedCollection = {
+    address: string;
+    keys:number
+}
 
+const Hero = ({ session }: { session: Session }) => {
+    const [tradeHistory, setTradeHistory] = useState<ContractTradeEvent[]>([]);
+    const [protocolPercentage, setProtocolPercentage] = useState<number>(0);
+    const [subjectPercentage, setSubjectPercentage] = useState<number>(0);
+    const [ownedKeys, setOwnedKeys] = useState<OwnedCollection[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const history = await getTradeHistory();
+            const protocol = await getProtocolFeePercentage();
+            const subject = await getSubjectFeePercentage();
+            const owned = await getOwnedCollections(session.user);
+
+            setTradeHistory(history);
+            setProtocolPercentage(protocol);
+            setSubjectPercentage(subject);
+            setOwnedKeys(owned);
+        };
+
+        fetchData();
+    }, [session]);
+
+    const userTradeHistory = tradeHistory.filter(trade => {
+        return trade.data.trader === session.user.address;
+    });
+    
     return (
         <div className="px-20 py-10 w-full">
             <h1 className="text-xl">Dashboard</h1>
@@ -31,6 +59,24 @@ const Hero = async ({ session }: { session: Session }) => {
                 alt="Keys not found"/>
                     </div>:null
             }
+
+            <h1 className="text-xl mt-20">Recent User Trade History</h1>
+            <div className="rounded-md w-full shadow-md p-5 mt-10">
+                <div className="flex gap-10 border-b-[0.5px] border-black p-2">
+                    <p className="w-[20%]">Sequence Number</p>
+                    <p className="w-[40%]">Subject</p>
+                    <p className="w-[40%]">Trader</p>
+                </div>
+                {
+                    userTradeHistory.map((trade,index)=>{
+                        return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
+                            <p className="w-[20%]">{trade.sequence_number}</p>
+                            <p className="w-[40%]">{trade.data.subject.slice(0,4)}...{trade.data.subject.slice(-4)}</p>
+                            <p className="w-[40%]">{trade.data.trader.slice(0,4)}...{trade.data.trader.slice(-4)}</p>
+                        </div>
+                    })
+                }
+            </div>
             <h1 className="text-xl mt-20">Trade History</h1>
             <div className="rounded-md w-full shadow-md p-5 mt-10">
                 <div className="flex gap-10 border-b-[0.5px] border-black p-2">
