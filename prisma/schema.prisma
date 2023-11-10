@@ -46,7 +46,7 @@ model User {
   emailVerified DateTime?
   image         String?
   privateKey    String
-  publicKey    String
+  publicKey     String
   address       String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

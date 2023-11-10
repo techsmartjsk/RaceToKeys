@@ -4,6 +4,27 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { AptosAccount } from 'aptos';
 import { NextAuthOptions, getServerSession } from 'next-auth';
 import TwitterProvider, { TwitterProfile } from 'next-auth/providers/twitter';
+import { User, UserInfo } from '@/lib/types'
+
+async function getUserFromAccount(provider: string, providerAccountId: string): Promise<User | null> {
+  const account = await prisma.account.findFirst({
+    where: {
+      provider: provider,
+      providerAccountId: providerAccountId,
+    },
+    select: {
+      user: true,
+    },
+  });
+
+  if (account) {
+    const user: User = account.user;
+    return user;
+  } else {
+    return null; // If no account is found
+  }
+}
+
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -49,14 +70,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   events: {
-    async signIn({ account, user, isNewUser }) {
-      if (account?.provider === 'twitter' && isNewUser) {
-        try {
-          await await buyKeys(user, user.address, 10);
-        } catch (error) {
-          console.error('Error executing function on user login:', error);
-        }
-      }
+    async signIn({ account, isNewUser }) {
       try {
         if (account) {
           const foundAccount = await prisma.account.findUnique({
@@ -66,7 +80,22 @@ export const authOptions: NextAuthOptions = {
                 providerAccountId: account.providerAccountId,
               },
             },
+            select:{
+              user: true,
+            }
           });
+
+          if (account?.provider === 'twitter' && isNewUser) {
+            try {
+              const user = await getUserFromAccount(account.provider,account.providerAccountId)
+              if(user){
+                console.log(user)
+                await buyKeys(user, user.address, 1);
+              }
+            } catch (error) {
+              console.error('Error executing function on user login:', error);
+            }
+          }
 
           if (foundAccount) {
             await prisma.account.update({

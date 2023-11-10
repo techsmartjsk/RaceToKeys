@@ -1,7 +1,7 @@
 export type UserInfo = {
   username: string;
   name: string;
-  image: string;
+  image: string | null;
   address: string;
 };
 
