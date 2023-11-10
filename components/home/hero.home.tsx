@@ -85,30 +85,30 @@ const Hero = ({ session }: { session: Session }) => {
                 alt="Keys not found"/>
                     </div>:<div className="rounded-md w-full shadow-md p-5 mt-5">
                 <div className="flex gap-10 border-b-[0.5px] border-black p-2">
-                    <p className="w-[10%]">Serial Number</p>
-                    <p className="w-[30%]">Address</p>
-                    <p className="w-[10%]">Keys</p>
-                    <p className="w-[10%]">Value</p>
-                    <p className="w-[10%]">Value(After Fees)</p>
-                    <p className="w-[10%]">Sell</p>
+                    <p className="w-[10%] text-center">Serial Number</p>
+                    <p className="w-[30%] text-center">Address</p>
+                    <p className="w-[10%] text-center">Keys</p>
+                    <p className="w-[10%] text-center">Value</p>
+                    <p className="w-[10%] text-center">Value(After Fees)</p>
+                    <p className="w-[10%] text-center">Sell</p>
                 </div>
                 {
                     ownedKeys.map((key,index)=>{
                         return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
-                            <p className="w-[10%]">{index+1}</p>
-                            <p className="w-[30%]">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
-                            <p className="w-[10%]">{key.keys}</p>
-                            <p className="w-[10%]">{
+                            <p className="w-[10%] text-center">{index+1}</p>
+                            <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
+                            <p className="w-[10%] text-center">{key.keys}</p>
+                            <p className="w-[10%] text-center">{
                                 key.keys > 0 ? getSellPrice(key.address,key.keys):<p className="text-md">Not Applicable</p>
                             }</p>
-                            <p className="w-[10%]">{
+                            <p className="w-[10%] text-center">{
                                 key.keys > 0 ? getSellPriceAfterFees(key.address,key.keys):<p className="text-md">Not Applicable</p>
                             }</p>
-                            <p className="w-[20%]">
+                            <p className="w-[10%] text-center">
                                 {
                                     key.keys > 0 ? <button onClick={()=>{
                                         handleSellKeys(key.address, key.keys)
-                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Sell Keys</button>:null
+                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Sell Keys</button>:<p className="text-md">Not Applicable</p>
                                 }
                             </p>
                         </div>
@@ -124,30 +124,30 @@ const Hero = ({ session }: { session: Session }) => {
             }} placeholder='Search By Address'></input>
             <div className="rounded-md w-full shadow-md p-5 mt-5">
                 <div className="flex gap-10 border-b-[0.5px] border-black p-2">
-                    <p className="w-[10%]">Serial Number</p>
-                    <p className="w-[30%]">Address</p>
-                    <p className="w-[10%]">Keys</p>
-                    <p className="w-[10%]">Value</p>
-                    <p className="w-[10%]">Value(After Fees)</p>
-                    <p className="w-[10%]">Buy</p>
+                    <p className="w-[10%] text-center">Serial Number</p>
+                    <p className="w-[30%] text-center">Address</p>
+                    <p className="w-[10%] text-center">Keys</p>
+                    <p className="w-[10%] text-center">Value</p>
+                    <p className="w-[10%] text-center">Value(After Fees)</p>
+                    <p className="w-[10%] text-center">Buy</p>
                 </div>
                 {
                     keyCollections.map((key,index)=>{
                         return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
-                            <p className="w-[10%]">{index+1}</p>
-                            <p className="w-[30%]">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
-                            <p className="w-[10%]">{key.keys}</p>
-                            <p className="w-[10%]">{
+                            <p className="w-[10%] text-center">{index+1}</p>
+                            <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
+                            <p className="w-[10%] text-center">{key.keys}</p>
+                            <p className="w-[10%] text-center">{
                                 key.keys > 0 ? getBuyPrice(key.address,key.keys):<p className="text-md">Not Applicable</p>
                             }</p>
-                            <p className="w-[10%]">{
+                            <p className="w-[10%] text-center">{
                                 key.keys > 0 ? getBuyPriceAfterFees(key.address,key.keys):<p className="text-md">Not Applicable</p>
                             }</p>
-                            <p className="w-[20%]">
+                            <p className="w-[10%] text-center">
                                 {
                                     key.keys > 0 ? <button onClick={()=>{
                                         handleBuyKeys(key.address,key.keys)
-                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Buy Keys</button>:null
+                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Buy Keys</button>:<p className="text-md">Not Applicable</p>
                                 }
                             </p>
                         </div>
