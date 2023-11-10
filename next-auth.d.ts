@@ -13,5 +13,7 @@ declare module 'next-auth' {
     name: PrismaUser['name'];
     image: PrismaUser['image'];
     privateKey: PrismaUser['privateKey'];
+    publicKey: PrismaUser['publicKey'];
+    address: PrismaUser['address'];
   }
 }

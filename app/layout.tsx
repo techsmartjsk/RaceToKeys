@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Sidebar from '@/components/sidebar/sidebar'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/authentication/auth'
+import { getServerAuthSession } from '@/authentication/auth'
 import { Suspense } from 'react'
 import Loading from './loading'
 import { Poppins } from 'next/font/google'
@@ -25,7 +23,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if(!session){
     return <html lang="en">
       <body className={poppins.className}>
@@ -40,9 +38,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Suspense fallback={<Loading/>}>
-          <Homepage/>
-        </Suspense>
+        <Homepage/>
         <ToastContainer />
       </body>
     </html>

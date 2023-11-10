@@ -1,3 +1,4 @@
+import { buyKeys } from '@/lib/contract';
 import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { AptosAccount } from 'aptos';
@@ -14,13 +15,19 @@ export const authOptions: NextAuthOptions = {
       profile(profile: TwitterProfile){
         const wallet = new AptosAccount();
         const privateKey = wallet.toPrivateKeyObject().privateKeyHex;
-
+        const publicKey = wallet.pubKey();
+        const pubKey = publicKey['hexString'];
+        const address = wallet.address();
+        const addressAcc = address['hexString']
+      
         return {
           id: profile.data.id,
           username: profile.data.username,
           name: profile.data.name ?? '',
           image: profile.data.profile_image_url ?? '',
+          publicKey:pubKey,
           privateKey: privateKey,
+          address: addressAcc
         };
       },
     }),
@@ -35,6 +42,7 @@ export const authOptions: NextAuthOptions = {
           privateKey: user.privateKey,
           name: user.name,
           image: user.image,
+          address: user.address
         },
       };
     },
@@ -61,9 +69,9 @@ export const authOptions: NextAuthOptions = {
                 },
               },
               data: {
-                refreshToken: account.refresh_token,
-                accessToken: account.access_token,
-                expiresAt: account.expires_at,
+                refresh_token: account.refresh_token,
+                access_token: account.access_token,
+                expires_at: account.expires_at,
               },
             });
           }

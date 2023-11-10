@@ -2,8 +2,7 @@ export type UserInfo = {
   username: string;
   name: string;
   imgSrc?: string;
-  followers?: number;
-  following?: number;
+  address: string;
 };
 
 export type User = UserInfo & {

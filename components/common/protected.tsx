@@ -1,5 +1,4 @@
-import { authOptions } from '@/authentication/auth';
-import { getServerSession } from 'next-auth';
+import { authOptions, getServerAuthSession } from '@/authentication/auth';
 import React from 'react';
 import { LoginPage } from '../auth/login.page';
 
@@ -8,7 +7,7 @@ export const Protected = async ({
 }: {
   children: React.ReactNode;
 }) => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
 
   if (!session) return <LoginPage />;
 

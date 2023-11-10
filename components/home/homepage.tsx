@@ -1,9 +1,12 @@
+import { authOptions } from "@/authentication/auth"
 import { Header } from "../navbar/header"
+import { getServerSession } from "next-auth"
 
-export const Homepage = () =>{
+export const Homepage = async () =>{
+    const session = await getServerSession(authOptions)
     return(
     <div>
-        <Header/>
+        <Header session={session}/>
     </div>
     )
 }
