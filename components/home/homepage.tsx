@@ -4,9 +4,11 @@ import { getServerSession } from "next-auth"
 
 export const Homepage = async () =>{
     const session = await getServerSession(authOptions)
-    return(
-    <div>
-        <Header session={session}/>
-    </div>
-    )
+    if(session){
+        return(
+            <div>
+                <Header session={session}/>
+            </div>
+            )
+    }
 }
