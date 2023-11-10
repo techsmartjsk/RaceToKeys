@@ -125,7 +125,7 @@ const Hero = ({ session }: { session: Session }) => {
             }
 
             <h1 className="text-xl mt-20">Key Collections</h1>
-            <input className="rounded-md p-2 border-[1px] w-[500px] mt-10" value={searchByAddress} onChange={(event)=>{
+            <input className="rounded-md p-2 border-[1px] w-[500px] text-md mt-10" value={searchByAddress} onChange={(event)=>{
                             setSearchByAddress(event?.target.value);
                             handleSearchByAddress(event?.target.value);
             }} placeholder='Search By Address'></input>
