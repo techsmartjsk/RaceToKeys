@@ -44,9 +44,13 @@ const Hero = ({ session }: { session: Session }) => {
         return trade.data.trader === session.user.address;
     });
 
-    const handleSearchByAddress = (searchValue: string) => {
+    const handleSearchByAddress = async (searchValue: string) => {
         if (searchValue === "") {
-            setKeyCollections(keyCollections);
+            const keys = await getKeySubjects(session.user)
+            const updatedKeyCollections = keys.filter(
+                (key) => key.address !== session.user.address 
+            );
+            setKeyCollections(updatedKeyCollections);
         } else {
             const filteredKeys = keyCollections.filter((key) =>
                 key.address.toLowerCase().includes(searchValue.toLowerCase())
