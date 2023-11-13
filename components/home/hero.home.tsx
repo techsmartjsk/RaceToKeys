@@ -24,23 +24,22 @@ const Hero = ({ session }: { session: Session }) => {
             const history = await getTradeHistory();
             const protocol = await getProtocolFeePercentage();
             const subject = await getSubjectFeePercentage();
-            const owned = await getOwnedCollections({
-                publicKey: session?.user.address,
-                username: session?.user.username,
-                name: session?.user.name,
-                image: session?.user.image,
-                privateKey: session?.user.privateKey,
-                address: session?.user.address
-            });
             const keys = await getKeySubjects(session.user)
             const updatedKeyCollections = keys.filter(
                 (key) => key.address !== session.user.address 
             );
-
+            const owned = await getOwnedCollections({
+                publicKey: session.user.address,
+                privateKey: session.user.privateKey,
+                username: session.user.username,
+                address: session.user.address,
+                name: session.user.name,
+                image: session.user.image
+            });
+            setOwnedKeys(owned)
             setTradeHistory(history);
             setProtocolPercentage(protocol);
             setSubjectPercentage(subject);
-            setOwnedKeys(owned);
             setKeyCollections(updatedKeyCollections)
         };
 
