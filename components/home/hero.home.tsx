@@ -44,7 +44,7 @@ const Hero = ({ session }: { session: Session }) => {
         };
 
         fetchData();
-    }, [session]);
+    }, []);
 
     const userTradeHistory = tradeHistory.filter(trade => {
         return trade.data.trader === session.user.address;
