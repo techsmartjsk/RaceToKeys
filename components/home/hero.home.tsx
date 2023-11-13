@@ -11,7 +11,19 @@ type Collection = {
     keys:number
 }
 
-const Hero = ({ session }: { session: Session }) => {
+const Hero = ({ session,
+    history,
+    protocol,
+    subject,
+    owned,
+    keys
+}: { session: Session, 
+    history: ContractTradeEvent[], 
+    protocol: number,
+    subject:number,
+    owned: Collection[],
+    keys: Collection[],
+}) => {
     const [tradeHistory, setTradeHistory] = useState<ContractTradeEvent[]>([]);
     const [protocolPercentage, setProtocolPercentage] = useState<number>(0);
     const [subjectPercentage, setSubjectPercentage] = useState<number>(0);
@@ -20,21 +32,12 @@ const Hero = ({ session }: { session: Session }) => {
     const [searchByAddress, setSearchByAddress] = useState("")
 
     useEffect(() => {
-        const fetchData = async () => {
-            const history = await getTradeHistory();
-            const protocol = await getProtocolFeePercentage();
-            const subject = await getSubjectFeePercentage();
-            const owned = await getOwnedCollections(session.user);
-            const keys = await getKeySubjects(session.user)
-            const updatedKeyCollections = keys.filter(
-                (key) => key.address !== session.user.address 
-            );
-
+        const fetchData = () => {
             setTradeHistory(history);
             setProtocolPercentage(protocol);
             setSubjectPercentage(subject);
             setOwnedKeys(owned);
-            setKeyCollections(updatedKeyCollections)
+            setKeyCollections(keys)
         };
 
         fetchData();
@@ -44,13 +47,9 @@ const Hero = ({ session }: { session: Session }) => {
         return trade.data.trader === session.user.address;
     });
 
-    const handleSearchByAddress = async (searchValue: string) => {
+    const handleSearchByAddress = (searchValue: string) => {
         if (searchValue === "") {
-            const keys = await getKeySubjects(session.user)
-            const updatedKeyCollections = keys.filter(
-                (key) => key.address !== session.user.address 
-            );
-            setKeyCollections(updatedKeyCollections);
+            setKeyCollections(keys);
         } else {
             const filteredKeys = keyCollections.filter((key) =>
                 key.address.toLowerCase().includes(searchValue.toLowerCase())
@@ -59,15 +58,13 @@ const Hero = ({ session }: { session: Session }) => {
         }
     }
 
-    const handleSellKeys = async (address:string, amount:number) =>{
-        await sellKeys(session.user, address, amount)
+    const handleSellKeys = (address:string, amount:number) =>{
         toast.success('Selling of keys has been initiated',{
             position: toast.POSITION.BOTTOM_RIGHT
         })
     }
 
-    const handleBuyKeys = async (address: string, amount:number) =>{
-        await buyKeys(session.user,address,amount)
+    const handleBuyKeys = (address: string, amount:number) =>{
         toast.success('Buying of keys has been initiated',{
             position: toast.POSITION.BOTTOM_RIGHT
         })
