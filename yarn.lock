@@ -2306,6 +2306,11 @@ react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18
   dependencies:
     loose-envify "^1.1.0"
 
+reactjs-popup@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.npmjs.org/reactjs-popup/-/reactjs-popup-2.0.6.tgz"
+  integrity sha512-A+tt+x9wdgZiZjv0e2WzYLD3IfFwJALaRaqwrCSXGjo0iQdsry/EtBEbQXRSmQs7cHmOi5eytCiSlOm8k4C+dg==
+
 read-cache@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/read-cache/-/read-cache-1.0.0.tgz"

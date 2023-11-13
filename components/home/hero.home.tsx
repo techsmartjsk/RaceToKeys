@@ -1,10 +1,13 @@
 "use client"
 
-import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory, getKeySubjects, getBuyPrice, getSellPrice, sellKeys, buyKeys, getSellPriceAfterFees, getBuyPriceAfterFees } from "@/lib/contract";
+import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory, getKeySubjects, getBuyPrice, getSellPrice, sellKeys, buyKeys, getSellPriceAfterFees, getBuyPriceAfterFees, getKeyBalance, getKeyHolders } from "@/lib/contract";
 import { ContractTradeEvent, Session } from "@/lib/types"
 import Image from "next/image"
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+
 
 type Collection = {
     address: string;
@@ -182,9 +185,11 @@ const Hero = ({ session }: { session: Session }) => {
                             <p className="w-[10%] text-center">{index+1}</p>
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
                             <p className="w-[10%] text-center">
-                            <button onClick={()=>{
-                                        handleBuyKeys(key.address,key.keys)
-                                    }} className="rounded-full p-1 text-sm text-white bg-[#30D5C8]">Buy Keys</button>
+                                <Popup trigger={<button className="rounded-full p-1 text-sm text-white bg-[#30D5C8]">Buy Keys</button>} modal>
+                                    <div className="rounded-md">
+                                        <p className="text-center font-bold">Buy Keys</p>
+                                    </div>
+                                </Popup>
                             </p>
                         </div>
                     })
