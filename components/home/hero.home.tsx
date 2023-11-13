@@ -28,14 +28,7 @@ const Hero = ({ session }: { session: Session }) => {
             const updatedKeyCollections = keys.filter(
                 (key) => key.address !== session.user.address 
             );
-            const owned = await getOwnedCollections({
-                publicKey: session.user.address,
-                privateKey: session.user.privateKey,
-                username: session.user.username,
-                address: session.user.address,
-                name: session.user.name,
-                image: session.user.image
-            });
+            const owned = await getOwnedCollections(session.user);
             setOwnedKeys(owned)
             setTradeHistory(history);
             setProtocolPercentage(protocol);
