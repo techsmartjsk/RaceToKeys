@@ -5,7 +5,7 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Session } from '@/lib/types'
-import { getAptosBalance, getKeyBalance } from '@/lib/contract';
+import { getAptosBalance } from '@/lib/contract';
 import { toast } from 'react-toastify';
 
 

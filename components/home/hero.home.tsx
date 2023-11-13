@@ -19,25 +19,55 @@ const Hero = ({ session }: { session: Session }) => {
     const [keyCollections, setKeyCollections] = useState<Collection[]>([])
     const [searchByAddress, setSearchByAddress] = useState("")
 
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchTradeHistory = async () =>{
+        try{
             const history = await getTradeHistory();
+            setTradeHistory(history);
+        }catch(error){
+            console.log(error)
+        }
+    }
+    useEffect(()=>{
+        fetchTradeHistory()
+    },[])
+
+    const fetchData = async () => {
+        try{
             const protocol = await getProtocolFeePercentage();
             const subject = await getSubjectFeePercentage();
-            const keys = await getKeySubjects(session.user)
+            const keys = await getKeySubjects(
+                {
+                    username: session.user?.username,
+                    name: session.user?.name,
+                    publicKey: session.user?.address,
+                    privateKey: session.user.privateKey,
+                    image: session.user.image,
+                    address: session.user.address
+                }
+            )
             const updatedKeyCollections = keys.filter(
                 (key) => key.address !== session.user.address 
             );
-            const owned = await getOwnedCollections(session.user);
+            const owned = await getOwnedCollections({
+                username: session.user?.username,
+                name: session.user?.name,
+                publicKey: session.user?.address,
+                privateKey: session.user.privateKey,
+                image: session.user.image,
+                address: session.user.address
+            });
             setOwnedKeys(owned)
-            setTradeHistory(history);
             setProtocolPercentage(protocol);
             setSubjectPercentage(subject);
             setKeyCollections(updatedKeyCollections)
-        };
+        }catch(error){
+            console.log(error)
+        }
+    };
 
+    useEffect(() => {
         fetchData();
-    }, []);
+    }, [session?.user, session.user?.name, session.user?.publicKey, session.user?.username, session.user?.address]);
 
     const userTradeHistory = tradeHistory.filter(trade => {
         return trade.data.trader === session.user.address;
@@ -71,6 +101,22 @@ const Hero = ({ session }: { session: Session }) => {
             position: toast.POSITION.BOTTOM_RIGHT
         })
     }
+
+    const handleSellPrice = async (keySubjectAddress: string, amount: number) =>{
+        try{
+            const sellPriceOfKey = await getSellPrice(keySubjectAddress, amount)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    const handleSellPriceAfterFees = async (keySubjectAddress: string, amount: number) =>{
+        try{
+            const sellPriceAfterFees = await getSellPriceAfterFees(keySubjectAddress, amount)
+        }catch(error){
+            console.log(error)
+        }
+    }
     
     return (
         <div className="px-20 py-10 w-full">
@@ -98,8 +144,6 @@ const Hero = ({ session }: { session: Session }) => {
                     <p className="w-[10%] text-center">Serial Number</p>
                     <p className="w-[30%] text-center">Address</p>
                     <p className="w-[10%] text-center">Keys</p>
-                    <p className="w-[10%] text-center">Value</p>
-                    <p className="w-[10%] text-center">Value(After Fees)</p>
                     <p className="w-[10%] text-center">Sell</p>
                 </div>
                 {
@@ -108,17 +152,11 @@ const Hero = ({ session }: { session: Session }) => {
                             <p className="w-[10%] text-center">{index+1}</p>
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
                             <p className="w-[10%] text-center">{key.keys}</p>
-                            <p className="w-[10%] text-center">{
-                                key.keys > 0 ? getSellPrice(key.address,key.keys):<p className="text-md">Not Applicable</p>
-                            }</p>
-                            <p className="w-[10%] text-center">{
-                                key.keys > 0 ? getSellPriceAfterFees(key.address,key.keys):<p className="text-md">Not Applicable</p>
-                            }</p>
                             <p className="w-[10%] text-center">
                                 {
                                     key.keys > 0 ? <button onClick={()=>{
                                         handleSellKeys(key.address, key.keys)
-                                    }} className="rounded-md p-2 text-white bg-red-500">Sell Keys</button>:<p className="text-md">Not Applicable</p>
+                                    }} className="rounded-full text-sm p-1 text-white bg-red-500">Sell Keys</button>:<p className="text-md">Not Applicable</p>
                                 }
                             </p>
                         </div>
@@ -136,9 +174,6 @@ const Hero = ({ session }: { session: Session }) => {
                 <div className="flex gap-10 border-b-[0.5px] border-black p-2">
                     <p className="w-[10%] text-center">Serial Number</p>
                     <p className="w-[30%] text-center">Address</p>
-                    <p className="w-[10%] text-center">Keys</p>
-                    <p className="w-[10%] text-center">Value</p>
-                    <p className="w-[10%] text-center">Value(After Fees)</p>
                     <p className="w-[10%] text-center">Buy</p>
                 </div>
                 {
@@ -146,19 +181,10 @@ const Hero = ({ session }: { session: Session }) => {
                         return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
                             <p className="w-[10%] text-center">{index+1}</p>
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
-                            <p className="w-[10%] text-center">{key.keys}</p>
-                            <p className="w-[10%] text-center">{
-                                key.keys > 0 ? getBuyPrice(key.address,key.keys):<p className="text-md">Not Applicable</p>
-                            }</p>
-                            <p className="w-[10%] text-center">{
-                                key.keys > 0 ? getBuyPriceAfterFees(key.address,key.keys):<p className="text-md">Not Applicable</p>
-                            }</p>
                             <p className="w-[10%] text-center">
-                                {
-                                    key.keys > 0 ? <button onClick={()=>{
+                            <button onClick={()=>{
                                         handleBuyKeys(key.address,key.keys)
-                                    }} className="rounded-md p-2 text-white bg-[#30D5C8]">Buy Keys</button>:<p className="text-md">Not Applicable</p>
-                                }
+                                    }} className="rounded-full p-1 text-sm text-white bg-[#30D5C8]">Buy Keys</button>
                             </p>
                         </div>
                     })
