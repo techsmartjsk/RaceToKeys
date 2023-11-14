@@ -1,6 +1,6 @@
 "use client"
 
-import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory, getKeySubjects, getBuyPrice, getSellPrice, sellKeys, buyKeys, getSellPriceAfterFees, getBuyPriceAfterFees, getKeyBalance, getKeyHolders } from "@/lib/contract";
+import { getOwnedCollections, getProtocolFeePercentage, getSubjectFeePercentage, getTradeHistory, getKeySubjects, getBuyPrice, getSellPrice, sellKeys, buyKeys, getSellPriceAfterFees, getBuyPriceAfterFees, getKeyBalance, getKeyHolders, getKeySupply } from "@/lib/contract";
 import { ContractTradeEvent, Session } from "@/lib/types"
 import Image from "next/image"
 import { useState, useEffect } from "react";
@@ -91,8 +91,10 @@ const Hero = ({ session }: { session: Session }) => {
         }
     }
 
-    const handleSellKeys = async (address:string, amount:number) =>{
+    const handleSellKeys = async (address:string, amount:number):Promise<void> =>{
         await sellKeys(session.user, address, amount)
+        console.log(amount)
+        setSellModalOpen(!sellModalOpen)
         toast.success('Selling of keys has been initiated',{
             position: toast.POSITION.BOTTOM_RIGHT
         })
@@ -169,6 +171,8 @@ const Hero = ({ session }: { session: Session }) => {
                     <p className="w-[10%] text-center">Serial Number</p>
                     <p className="w-[30%] text-center">Address</p>
                     <p className="w-[10%] text-center">Keys</p>
+                    <p className="w-[10%] text-center">Key Balance</p>
+                    <p className="w-[10%] text-center">Key Supply</p>
                     <p className="w-[10%] text-center">Sell</p>
                 </div>
                 {
@@ -176,7 +180,13 @@ const Hero = ({ session }: { session: Session }) => {
                         return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
                             <p className="w-[10%] text-center">{index+1}</p>
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
-                            <p className="w-[10%] text-center">{key.keys}</p>
+                            <p className="w-[10%] text-center">{key.keys}
+                                {
+                                    key.keys > 1 ? ' Keys':' Key'
+                                }
+                            </p>
+                            <p className="w-[10%] text-center">{getKeyBalance(session.user.address, key.address)}</p>
+                            <p className="w-[10%] text-center">{getKeySupply(key.address)}</p>
                             <div className="w-[10%] text-center">
                                 {
                                     key.keys > 0 ? 
@@ -203,7 +213,9 @@ const Hero = ({ session }: { session: Session }) => {
                                                         <h1 className="w-1/2">{handleSellPriceAfterFees(key.address, key.keys)}</h1>
                                                     </div>
                                                     <div>
-                                                        <button className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Sell Keys</button>
+                                                        <button onClick={()=>{
+                                                            handleSellKeys(key.address, key.keys)
+                                                        }} className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Sell Keys</button>
                                                     </div>
                                                 </div>
                                             </Modal>:null
@@ -290,7 +302,9 @@ const Hero = ({ session }: { session: Session }) => {
                             <p className="bg-red-500 text-md w-fit text-white p-2 rounded-full">Selling</p>
                         }
                         </div>
-                        <p className="w-[10%] text-center">{trade.data.key_amount}</p>
+                        <p className="w-[10%] text-center">{trade.data.key_amount} {
+                            trade.data.key_amount > 1 ? ' Keys':' Key'
+                        }</p>
                         <p className="w-[20%] text-center">{(trade.data.purchase_apt_amount / 1_0000_0000).toFixed(2)} APT</p>
                     </div>
                     })
@@ -318,7 +332,11 @@ const Hero = ({ session }: { session: Session }) => {
                                 <p className="bg-red-500 text-md w-fit text-white p-2 rounded-full">Selling</p>
                             }
                             </div>
-                            <p className="w-[10%] text-center">{trade.data.key_amount}</p>
+                            <p className="w-[10%] text-center">{trade.data.key_amount}
+                                {
+                                    trade.data.key_amount > 1 ? ' Keys':' Key'
+                                }
+                            </p>
                             <p className="w-[20%] text-center">{(trade.data.purchase_apt_amount / 1_0000_0000).toFixed(2)} APT</p>
                         </div>
                     })

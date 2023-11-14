@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { getServerAuthSession } from '@/authentication/auth'
-import { Suspense } from 'react'
-import Loading from './loading'
 import { Poppins } from 'next/font/google'
 import { Homepage } from '@/components/home/homepage'
 import { ToastContainer, toast } from 'react-toastify';
@@ -28,11 +26,9 @@ export default async function RootLayout({
   if(!session){
     return <html lang="en">
       <body className={poppins.className}>
-        <Suspense fallback={<Loading/>}>
-          <Protected>
-            {children}
-          </Protected>
-        </Suspense>
+        <Protected>
+          {children}
+        </Protected>
         <ToastContainer />
       </body>
     </html>
