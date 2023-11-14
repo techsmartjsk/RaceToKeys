@@ -1,9 +1,10 @@
-import { Protected } from "@/components/common/protected";
+
+import { Homepage } from "@/components/home/homepage";
 
 export default function Home() {
   return (
-    <Protected>
-      {null}
-    </Protected>
+    <div>
+      <Homepage/>
+    </div>
   )
 }

@@ -58,8 +58,8 @@ export const Header = ({ session }: { session: Session }) => {
                         <Wallet/>
                         <p className="text-lg">{balance.toFixed(2)} APT</p>
                     </div>
-                    <div className='flex gap-2 w-[230px] p-2 items-center cursor-pointer border-black border-[0.5px] rounded-md'>
-                        {user?.image && <Image src={user.image} width={40} height={40} className='rounded-full' alt={user?.name} />}
+                    <div onClick={handleDropdown} className='flex gap-2 w-[230px] p-2 items-center cursor-pointer border-black border-[0.5px] rounded-md'>
+                        {user?.image && <Image onClick={handleDropdown} src={user.image} width={40} height={40} className='rounded-full' alt={user?.name} />}
                         <p className='text-lg cursor-pointer' onClick={handleDropdown}>{user?.name}</p>
                         {
                             !showDropdown ? <ChevronDown onClick={handleDropdown}/>:<ChevronUp onClick={handleDropdown}/>

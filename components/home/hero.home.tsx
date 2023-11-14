@@ -5,9 +5,7 @@ import { ContractTradeEvent, Session } from "@/lib/types"
 import Image from "next/image"
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-
+import Modal from "../common/modal";
 
 type Collection = {
     address: string;
@@ -21,6 +19,8 @@ const Hero = ({ session }: { session: Session }) => {
     const [ownedKeys, setOwnedKeys] = useState<Collection[]>([]);
     const [keyCollections, setKeyCollections] = useState<Collection[]>([])
     const [searchByAddress, setSearchByAddress] = useState("")
+    const [sellModalOpen, setSellModalOpen] = useState(false)
+    const [buyModalOpen, setBuyModalOpen] = useState(false)
 
     const fetchTradeHistory = async () =>{
         try{
@@ -105,19 +105,41 @@ const Hero = ({ session }: { session: Session }) => {
         })
     }
 
-    const handleSellPrice = async (keySubjectAddress: string, amount: number) =>{
+    const handleBuyPrice = async (address: string, amount: number) : Promise<number>=>{
         try{
-            const sellPriceOfKey = await getSellPrice(keySubjectAddress, amount)
+            const buyPriceOfKeys = await getBuyPrice(address, amount)
+            return buyPriceOfKeys 
         }catch(error){
-            console.log(error)
+            return 0;
         }
     }
 
-    const handleSellPriceAfterFees = async (keySubjectAddress: string, amount: number) =>{
+    const handleBuyPriceAfterFees = async (address: string, amount: number) : Promise<number> => {
         try{
-            const sellPriceAfterFees = await getSellPriceAfterFees(keySubjectAddress, amount)
+            const buyPriceOfKeysAfterFees = await getBuyPriceAfterFees(address, amount)
+            return buyPriceOfKeysAfterFees
+        }catch(error){
+            return 0;
+        }
+    }
+
+    const handleSellPrice = async (keySubjectAddress: string, amount: number): Promise<number> =>{
+        try{
+            const sellPriceOfKey = await getSellPrice(keySubjectAddress, amount)
+            return sellPriceOfKey
         }catch(error){
             console.log(error)
+            return 0;
+        }
+    }
+
+    const handleSellPriceAfterFees = async (keySubjectAddress: string, amount: number): Promise<number> =>{
+        try{
+            const sellPriceAfterFees = await getSellPriceAfterFees(keySubjectAddress, amount)
+            return sellPriceAfterFees
+        }catch(error){
+            console.log(error)
+            return 0;
         }
     }
     
@@ -155,13 +177,41 @@ const Hero = ({ session }: { session: Session }) => {
                             <p className="w-[10%] text-center">{index+1}</p>
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
                             <p className="w-[10%] text-center">{key.keys}</p>
-                            <p className="w-[10%] text-center">
+                            <div className="w-[10%] text-center">
                                 {
-                                    key.keys > 0 ? <button onClick={()=>{
-                                        handleSellKeys(key.address, key.keys)
-                                    }} className="rounded-full text-sm p-1 text-white bg-red-500">Sell Keys</button>:<p className="text-md">Not Applicable</p>
+                                    key.keys > 0 ? 
+                                    <div>
+                                        <button onClick={()=>{
+                                                setSellModalOpen(!sellModalOpen)
+                                            }
+                                        } className="rounded-full p-1 bg-red-500 text-white">Sell Keys</button>
+                                        {
+                                            sellModalOpen ? <Modal title="Sell Keys" isOpen={sellModalOpen} onClose={()=>{
+                                                setSellModalOpen(!sellModalOpen)
+                                            }}>
+                                                <div className="w-full flex flex-col justify-center">
+                                                    <div className="flex">
+                                                        <h2 className="text-lg w-1/2 text-left">Key Address : </h2>
+                                                        <h1 className="w-1/2">{key.address.slice(0,4)}...{key.address.slice(-4)}</h1>
+                                                    </div>
+                                                    <div className="flex">
+                                                        <h2 className="text-lg w-1/2 text-left">Sell Price of Keys : </h2>
+                                                        <h1 className="w-1/2">{handleSellPrice(key.address,key.keys)}</h1>
+                                                    </div>
+                                                    <div className="flex">
+                                                        <h2 className="text-lg w-1/2 text-left">Sell Price of Keys (After Fees) : </h2>
+                                                        <h1 className="w-1/2">{handleSellPriceAfterFees(key.address, key.keys)}</h1>
+                                                    </div>
+                                                    <div>
+                                                        <button className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Sell Keys</button>
+                                                    </div>
+                                                </div>
+                                            </Modal>:null
+                                        }
+                                    </div>
+                                    :<p className="text-md">Not Applicable</p>
                                 }
-                            </p>
+                            </div>
                         </div>
                     })
                 }
@@ -184,13 +234,35 @@ const Hero = ({ session }: { session: Session }) => {
                         return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
                             <p className="w-[10%] text-center">{index+1}</p>
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
-                            <p className="w-[10%] text-center">
-                                <Popup trigger={<button className="rounded-full p-1 text-sm text-white bg-[#30D5C8]">Buy Keys</button>} modal>
-                                    <div className="rounded-md">
-                                        <p className="text-center font-bold">Buy Keys</p>
-                                    </div>
-                                </Popup>
-                            </p>
+                            <div className="w-[10%] text-center">
+                                <button onClick={()=>{
+                                            setBuyModalOpen(!buyModalOpen)
+                                        }
+                                    } className="rounded-full p-1 bg-green-500 text-white">Buy Keys</button>
+                                    {
+                                        buyModalOpen ? <Modal title="Buy Keys" isOpen={buyModalOpen} onClose={()=>{
+                                            setBuyModalOpen(!buyModalOpen)
+                                        }}>
+                                            <div className="w-full flex flex-col justify-center">
+                                                <div className="flex">
+                                                    <h2 className="text-lg w-1/2 text-left">Key Address : </h2>
+                                                    <h1 className="w-1/2">{key.address.slice(0,4)}...{key.address.slice(-4)}</h1>
+                                                </div>
+                                                <div className="flex">
+                                                    <h2 className="text-lg w-1/2 text-left">Buy Price of Keys : </h2>
+                                                    <h1 className="w-1/2">{handleBuyPrice(key.address, key.keys)}</h1>
+                                                </div>
+                                                <div className="flex">
+                                                    <h2 className="text-lg w-1/2 text-left">Buy Price of Keys (After Fees) : </h2>
+                                                    <h1 className="w-1/2">{handleBuyPriceAfterFees(key.address, key.keys)}</h1>
+                                                </div>
+                                                <div>
+                                                    <button className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Buy Keys</button>
+                                                </div>
+                                            </div>
+                                        </Modal>:null
+                                    }
+                            </div>
                         </div>
                     })
                 }

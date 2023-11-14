@@ -7,6 +7,7 @@ import { Poppins } from 'next/font/google'
 import { Homepage } from '@/components/home/homepage'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Protected } from "@/components/common/protected";
 
 export const metadata: Metadata = {
   title: 'Network',
@@ -28,7 +29,9 @@ export default async function RootLayout({
     return <html lang="en">
       <body className={poppins.className}>
         <Suspense fallback={<Loading/>}>
-          {children}
+          <Protected>
+            {children}
+          </Protected>
         </Suspense>
         <ToastContainer />
       </body>
@@ -38,7 +41,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Homepage/>
+        {children}
         <ToastContainer />
       </body>
     </html>
