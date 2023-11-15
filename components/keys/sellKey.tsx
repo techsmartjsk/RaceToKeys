@@ -26,7 +26,7 @@ export default async function SellKey({
     <div className="flex">
         <h2 className="text-lg w-1/2 text-left">Amount To Sell : </h2>
         <input value={keysToSell} 
-        className="rounded-md border-[0.5px]"
+        className="rounded-full border-[0.5px]"
         onChange={(event)=>{
             setKeysToSell(event.target.value)
         }} placeholder="Enter Amount To Sell"></input>

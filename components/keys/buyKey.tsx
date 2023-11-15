@@ -57,7 +57,7 @@ const BuyKeys = async ({
             <p className="w-1/2 font-semibold text-left">Keys to buy : </p>
             <input type="number" value={keysToBuy} onChange={(event)=>{
                 setKeysToBuy(event.target.value)
-            }} className="rounded-md border-[0.5px]" placeholder='Enter Keys to Buy'></input>
+            }} className="rounded-full border-[0.5px]" placeholder='Enter Keys to Buy'></input>
         </div>
         <div className='flex gap-5'>
             <p className="w-1/2 font-semibold text-left">Price of Keys : </p>
@@ -74,7 +74,7 @@ const BuyKeys = async ({
                     position: toast.POSITION.BOTTOM_RIGHT
                 })
                 setBuyModalOpenIndex(-1)
-            }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-md">Buy Keys</button>:<p>Not Enough Keys available!</p>
+            }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-full">Buy Keys</button>:<p>Not Enough Keys available!</p>
         }
     </div>
     )
