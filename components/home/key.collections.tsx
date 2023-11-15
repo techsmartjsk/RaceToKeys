@@ -1,9 +1,9 @@
 "use client"
 
-import { buyKeys, getKeySubjects} from "@/lib/contract";
+import { getKeySubjects} from "@/lib/contract";
 import { useEffect, useState, ChangeEvent } from "react";
 import { toast } from "react-toastify";
-import { Session } from "@/lib/types"
+import { Session, User } from "@/lib/types"
 import Modal from "../common/modal";
 import { Collection } from "@/lib/types";
 import BuyKeys from "../keys/buyKey";
@@ -33,12 +33,12 @@ export default function KeyCollections({ session }:{
         setCurrentPage(pageNumber);
     };
 
+    async function fetchKeyCollections(user: User){
+        const keys = await getKeySubjects(user)
+        setKeyCollections(keys)
+    }
     useEffect(()=>{
-        async function fetchKeyCollections(){
-            const keys = await getKeySubjects(session.user)
-            setKeyCollections(keys)
-        }
-        fetchKeyCollections()
+        fetchKeyCollections(session.user)
     },[session.user])
 
     async function searchKeyCollections(formData: FormData){
@@ -75,19 +75,19 @@ export default function KeyCollections({ session }:{
                     <input name="searchValue" onChange={(event)=>{
                         changeKeyCollection(event)
                     }} className="rounded-full p-2 border-[1px] w-[500px] text-md" placeholder='Search By Address'></input>
-                    <button className="text-white text-md bg-blue-500 py-2 px-5 rounded-full">Search</button>
+                    <button className="text-white text-md bg-[#30D5C8] py-2 px-5 rounded-full">Search</button>
                 </form>
             </div>
             <div className="rounded-md w-full flex flex-col shadow-md p-5 mt-5">
                 <div className="ml-auto">
-                    <nav className="flex gap-5 items-center border-[1px] bg-blue-500 text-white p-2">
+                    <nav className="flex gap-5 items-center border-[1px] bg-[#30D5C8] text-white p-2">
                         <p>Page</p>
                         <select
                             value={currentPage}
                             onChange={(event) => {
                             handlePageChange(Number(event.target.value));
                             }}
-                            className="pagination bg-blue-500 text-white focus:outline-none hover:outline-none"
+                            className="pagination bg-[#30D5C8] text-white focus:outline-none hover:outline-none"
                         >
                             {Array.from({ length: totalPages }).map((_, index) => (
                             <option

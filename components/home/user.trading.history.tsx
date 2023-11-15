@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 export default function UserTradingHistory({ session }: {
     session: Session
 }){
+    async function fetchData(){
+        const tradeHistory = await getTradeHistory()
+        setTradeHistory(tradeHistory)
+    }
 
     useEffect(()=>{
-        async function fetchData(){
-            const tradeHistory = await getTradeHistory()
-            setTradeHistory(tradeHistory)
-        }
         fetchData()
     },[])
 
@@ -41,14 +41,14 @@ export default function UserTradingHistory({ session }: {
             <h1 className="text-xl mt-20">Recent User Trade History</h1>
             <div className="rounded-md flex flex-col w-full shadow-md p-5 mt-10">
                 <div className="ml-auto">
-                    <nav className="flex gap-5 items-center border-[1px] bg-blue-500 text-white p-2">
+                    <nav className="flex gap-5 items-center border-[1px] bg-[#30D5C8] text-white p-2">
                         <p>Page</p>
                         <select
                             value={currentPage}
                             onChange={(event) => {
                             handlePageChange(Number(event.target.value));
                             }}
-                            className="pagination bg-blue-500 text-white focus:outline-none hover:outline-none"
+                            className="pagination bg-[#30D5C8] text-white focus:outline-none hover:outline-none"
                         >
                             {Array.from({ length: totalPages }).map((_, index) => (
                             <option
