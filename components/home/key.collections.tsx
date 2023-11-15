@@ -1,12 +1,11 @@
 "use client"
 
-import { buyKeys, getBuyPrice, getKeySubjects, getBuyPriceAfterFees } from "@/lib/contract";
+import { buyKeys, getKeySubjects} from "@/lib/contract";
 import { useEffect, useState, ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import { Session } from "@/lib/types"
 import Modal from "../common/modal";
 import { Collection } from "@/lib/types";
-import { handleBuyPrice, handleBuyPriceAfterFees } from "@/server/actions";
 import BuyKeys from "../keys/buyKey";
 
 export default function KeyCollections({ session }:{

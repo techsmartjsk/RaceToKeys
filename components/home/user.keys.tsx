@@ -2,18 +2,18 @@
 
 import Image from "next/image"
 import { useState, useEffect, Suspense } from "react";
-import { getKeyBalance, getKeySupply, getOwnedCollections, getSellPrice, getSellPriceAfterFees, sellKeys } from "@/lib/contract";
+import { getKeyBalance, getKeySupply, getOwnedCollections } from "@/lib/contract";
 import { Collection, Session } from "@/lib/types";
-import { toast } from "react-toastify";
 import Modal from "../common/modal";
 import ModalAnimation from "../common/modal.animation";
+import SellKey from "../keys/sellKey";
 
 export default function UserKeys({ session }:{
     session: Session
 }){
     const [ownedKeys, setOwnedKeys] = useState<Collection[]>([]);
-    const [sellModalOpen, setSellModalOpen] = useState(false)
-    
+    const [sellModalOpenIndex, setSellModalOpenIndex] = useState<number>(-1)
+    const [keysToSell, setKeysToSell] = useState<number>(0)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,36 +33,6 @@ export default function UserKeys({ session }:{
         };
         fetchData();
     }, [session]);
-
-    const handleSellKeys = async (address:string, amount:number):Promise<void> =>{
-        await sellKeys(session.user, address, amount)
-
-        setSellModalOpen(!sellModalOpen)
-        toast.success('Selling of keys has been initiated',{
-            position: toast.POSITION.BOTTOM_RIGHT
-        })
-    }
-
-
-    const handleSellPrice = async (keySubjectAddress: string, amount: number): Promise<number> =>{
-        try{
-            const sellPriceOfKey = await getSellPrice(keySubjectAddress, amount)
-            return sellPriceOfKey
-        }catch(error){
-            console.log(error)
-            return 0;
-        }
-    }
-
-    const handleSellPriceAfterFees = async (keySubjectAddress: string, amount: number): Promise<number> =>{
-        try{
-            const sellPriceAfterFees = await getSellPriceAfterFees(keySubjectAddress, amount)
-            return sellPriceAfterFees
-        }catch(error){
-            console.log(error)
-            return 0;
-        }
-    }
 
     return(
         <div>
@@ -101,32 +71,21 @@ export default function UserKeys({ session }:{
                                         key.keys > 0 ? 
                                         <div>
                                             <button onClick={()=>{
-                                                    setSellModalOpen(!sellModalOpen)
+                                                    setSellModalOpenIndex(index)
                                                 }
                                             } className="rounded-full p-1 bg-red-500 text-white">Sell Keys</button>
                                             {
-                                                sellModalOpen ? <Modal title="Sell Keys" isOpen={sellModalOpen} onClose={()=>{
-                                                    setSellModalOpen(!sellModalOpen)
+                                                sellModalOpenIndex != -1 ? <Modal title="Sell Keys" isOpen={true} onClose={()=>{
+                                                    setSellModalOpenIndex(-1)
                                                 }}>
-                                                    <div className="w-full flex flex-col justify-center">
-                                                        <div className="flex">
-                                                            <h2 className="text-lg w-1/2 text-left">Key Address : </h2>
-                                                            <h1 className="w-1/2">{key.address.slice(0,4)}...{key.address.slice(-4)}</h1>
-                                                        </div>
-                                                        <div className="flex">
-                                                            <h2 className="text-lg w-1/2 text-left">Sell Price of Keys : </h2>
-                                                            <h1 className="w-1/2">{handleSellPrice(key.address,key.keys)}</h1>
-                                                        </div>
-                                                        <div className="flex">
-                                                            <h2 className="text-lg w-1/2 text-left">Sell Price of Keys (After Fees) : </h2>
-                                                            <h1 className="w-1/2">{handleSellPriceAfterFees(key.address, key.keys)}</h1>
-                                                        </div>
-                                                        <div>
-                                                            <button onClick={()=>{
-                                                                handleSellKeys(key.address, key.keys)
-                                                            }} className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Sell Keys</button>
-                                                        </div>
-                                                    </div>
+                                                    <SellKey 
+                                                    user={session.user}
+                                                    keysToSell={keysToSell}
+                                                    setKeysToSell={setKeysToSell}
+                                                    keySubjectAddress={ownedKeys[sellModalOpenIndex].address}
+                                                    setSellModalOpenIndex={setSellModalOpenIndex}
+                                                    />
+                                                   
                                                 </Modal>:null
                                             }
                                         </div>

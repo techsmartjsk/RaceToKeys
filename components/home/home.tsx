@@ -12,7 +12,7 @@ const Homepage = async () => {
     if(session){
         return (
             <>
-            <Header session={session}/>
+                <Header session={session}/>
                 <div className="px-20 py-10 w-full">
                     <ProtocolInformation/>
                     <UserKeys session={session}/>
