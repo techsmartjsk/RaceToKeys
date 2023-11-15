@@ -20,8 +20,8 @@ const BuyKeys = async ({
     setSelectedAddress: React.Dispatch<React.SetStateAction<string>>,
     keysHolded: number,
     setKeysHolded:React.Dispatch<React.SetStateAction<number>>,
-    keysToBuy: number,
-    setKeysToBuy: React.Dispatch<React.SetStateAction<number>>,
+    keysToBuy: string,
+    setKeysToBuy: React.Dispatch<React.SetStateAction<string>>,
     setBuyModalOpenIndex:React.Dispatch<React.SetStateAction<number>>
 }) =>{
     const keyHolders = await getKeyHolders(keySubjectAddress)
@@ -56,7 +56,7 @@ const BuyKeys = async ({
         <div className='flex gap-5'>
             <p className="w-1/2 font-semibold text-left">Keys to buy : </p>
             <input type="number" value={keysToBuy} onChange={(event)=>{
-                setKeysToBuy(Number(event.target.value))
+                setKeysToBuy(event.target.value)
             }} className="rounded-md border-[0.5px]" placeholder='Enter Keys to Buy'></input>
         </div>
         <div className='flex gap-5'>
@@ -68,13 +68,13 @@ const BuyKeys = async ({
             <p>{handleBuyPriceAfterFees(keySubjectAddress, Number(keysToBuy))}</p>
         </div>
         {
-            keys >= keysToBuy ? <button onClick={()=>{
-                handleBuyKeys(user,keySubjectAddress,keysToBuy);
+            keys >= Number(keysToBuy) ? <button onClick={()=>{
+                handleBuyKeys(user,keySubjectAddress,Number(keysToBuy));
                 toast.success('Bought Keys!',{
                     position: toast.POSITION.BOTTOM_RIGHT
                 })
                 setBuyModalOpenIndex(-1)
-            }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md">Buy Keys</button>:<p>Not Enough Keys available!</p>
+            }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-md">Buy Keys</button>:<p>Not Enough Keys available!</p>
         }
     </div>
     )

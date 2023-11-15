@@ -15,7 +15,7 @@ export default function KeyCollections({ session }:{
     const [buyModalOpenIndex, setBuyModalOpenIndex] = useState<number>(-1);
     const [selectedAddress, setSelectedAddress] = useState<string>("");
     const [keysHolded, setKeysHolded] = useState<number>(0)
-    const [keysToBuy, setKeysToBuy] = useState<number>(0)
+    const [keysToBuy, setKeysToBuy] = useState<string>("")
 
     useEffect(()=>{
         async function fetchKeyCollections(){

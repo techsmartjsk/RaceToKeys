@@ -13,7 +13,7 @@ export default function UserKeys({ session }:{
 }){
     const [ownedKeys, setOwnedKeys] = useState<Collection[]>([]);
     const [sellModalOpenIndex, setSellModalOpenIndex] = useState<number>(-1)
-    const [keysToSell, setKeysToSell] = useState<number>(0)
+    const [keysToSell, setKeysToSell] = useState<string>("")
 
     useEffect(() => {
         const fetchData = async () => {
