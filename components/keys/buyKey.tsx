@@ -57,6 +57,10 @@ const BuyKeys = async ({
             <p>{keysCurrentValue}</p>
         </div>
         <div className='flex gap-5'>
+            <p className="w-1/2 font-semibold text-left">Key Supply : </p>
+            <p>{keys}</p>
+        </div>
+        <div className='flex gap-5'>
             <p className="w-1/2 font-semibold text-left">Keys to buy : </p>
             <input type="number" value={keysToBuy} onChange={(event)=>{
                 setKeysToBuy(event.target.value)
@@ -70,15 +74,13 @@ const BuyKeys = async ({
             <p className="w-1/2 font-semibold text-left">Price of Keys(After Fees) : </p>
             <p>{handleBuyPriceAfterFees(keySubjectAddress, Number(keysToBuy))}</p>
         </div>
-        {
-            keys >= Number(keysToBuy) ? <button onClick={()=>{
+        <button onClick={()=>{
                 handleBuyKeys(user,keySubjectAddress,Number(keysToBuy));
                 toast.success('Bought Keys!',{
                     position: toast.POSITION.BOTTOM_RIGHT
                 })
                 setBuyModalOpenIndex(-1)
-            }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-full">Buy Keys</button>:<p>Not Enough Keys available!</p>
-        }
+            }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-full">Buy Keys</button>
     </div>
     )
 }
