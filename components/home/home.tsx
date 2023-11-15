@@ -1,9 +1,9 @@
-import TradeHistory from "../components/home/trade.history";
-import { UserTradingHistory } from "../components/home/user.trading.history";
-import KeyCollections from "../components/home/key.collections";
-import ProtocolInformation from "../components/home/protocol.info";
-import UserKeys from "../components/home/user.keys";
-import { Header } from "../components/navbar/header";
+import TradeHistory from "./trade.history";
+import { UserTradingHistory } from "./user.trading.history";
+import KeyCollections from "./key.collections";
+import ProtocolInformation from "./protocol.info";
+import UserKeys from "./user.keys";
+import { Header } from "../navbar/header";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/authentication/auth";
 
