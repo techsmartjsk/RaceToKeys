@@ -7,12 +7,16 @@ import { Session } from "@/lib/types"
 import Modal from "../common/modal";
 import { Collection } from "@/lib/types";
 import { handleBuyPrice, handleBuyPriceAfterFees } from "@/server/actions";
+import BuyKeys from "../keys/buyKey";
 
 export default function KeyCollections({ session }:{
     session: Session
 }){
     const [keyCollections, setKeyCollections] = useState<Collection[]>([])
-    const [buyModalOpenIndex, setBuyModalOpenIndex] = useState<number | null>(null);
+    const [buyModalOpenIndex, setBuyModalOpenIndex] = useState<number>(-1);
+    const [selectedAddress, setSelectedAddress] = useState<string>("");
+    const [keysHolded, setKeysHolded] = useState<number>(0)
+    const [keysToBuy, setKeysToBuy] = useState<number>(0)
 
     useEffect(()=>{
         async function fetchKeyCollections(){
@@ -77,7 +81,6 @@ export default function KeyCollections({ session }:{
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
                             <div className="w-[10%] text-center">
                                 <button onClick={()=>{
-                                            console.log("Hi!")
                                             setBuyModalOpenIndex(index)
                                         }
                                     } className="rounded-full p-1 bg-green-500 text-white">Buy Keys</button>
@@ -90,23 +93,17 @@ export default function KeyCollections({ session }:{
                    buyModalOpenIndex !== null && buyModalOpenIndex !== -1 ? <Modal title="Buy Keys" isOpen={true} onClose={()=>{
                         setBuyModalOpenIndex(-1)
                     }}>
-                        <div className="w-full flex flex-col justify-center">
-                            <div className="flex">
-                                <h2 className="text-lg w-1/2 text-left">Key Address : </h2>
-                                <h1 className="w-1/2">{keyCollections[buyModalOpenIndex].address.slice(0,4)}...{keyCollections[buyModalOpenIndex].address.slice(-4)}</h1>
-                            </div>
-                            <div className="flex">
-                                <h2 className="text-lg w-1/2 text-left">Buy Price of Keys : </h2>
-                                <h1 className="w-1/2">{handleBuyPrice(keyCollections[buyModalOpenIndex].address, keyCollections[buyModalOpenIndex].keys)}</h1>
-                            </div>
-                            <div className="flex">
-                                <h2 className="text-lg w-1/2 text-left">Buy Price of Keys (After Fees) : </h2>
-                                <h1 className="w-1/2">{handleBuyPriceAfterFees(keyCollections[buyModalOpenIndex].address, keyCollections[buyModalOpenIndex].keys)}</h1>
-                            </div>
-                            <div>
-                                <button className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Buy Keys</button>
-                            </div>
-                        </div>
+                        <BuyKeys 
+                        user={session.user}
+                        keySubjectAddress={keyCollections[buyModalOpenIndex].address}
+                        selectedAddress={selectedAddress}
+                        setSelectedAddress={setSelectedAddress}
+                        keysHolded={keysHolded}
+                        setKeysHolded={setKeysHolded}
+                        keysToBuy={keysToBuy}
+                        setKeysToBuy={setKeysToBuy}
+                        setBuyModalOpenIndex={setBuyModalOpenIndex}
+                        />
                     </Modal>:null
                 }
             </div>

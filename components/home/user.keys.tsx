@@ -36,7 +36,7 @@ export default function UserKeys({ session }:{
 
     const handleSellKeys = async (address:string, amount:number):Promise<void> =>{
         await sellKeys(session.user, address, amount)
-        console.log(amount)
+
         setSellModalOpen(!sellModalOpen)
         toast.success('Selling of keys has been initiated',{
             position: toast.POSITION.BOTTOM_RIGHT

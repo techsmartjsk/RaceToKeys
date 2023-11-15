@@ -1,4 +1,5 @@
-import { getBuyPrice, getBuyPriceAfterFees } from "@/lib/contract";
+import { buyKeys, getBuyPrice, getBuyPriceAfterFees } from "@/lib/contract";
+import { User } from '@/lib/types';
 
 
 export const handleBuyPrice = async (address: string, amount: number) : Promise<number>=>{
@@ -17,4 +18,8 @@ export const handleBuyPriceAfterFees = async (address: string, amount: number) :
     }catch(error){
         return 0;
     }
+}
+
+export const handleBuyKeys = async (buyer: User, keySubjectAddress: string, amount: number) : Promise<void> =>{
+    await buyKeys(buyer,keySubjectAddress,amount)
 }
