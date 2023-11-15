@@ -6,12 +6,13 @@ import { toast } from "react-toastify";
 import { Session } from "@/lib/types"
 import Modal from "../common/modal";
 import { Collection } from "@/lib/types";
+import { handleBuyPrice, handleBuyPriceAfterFees } from "@/server/actions";
 
 export default function KeyCollections({ session }:{
     session: Session
 }){
     const [keyCollections, setKeyCollections] = useState<Collection[]>([])
-    const [buyModalOpen, setBuyModalOpen] = useState(false)
+    const [buyModalOpenIndex, setBuyModalOpenIndex] = useState<number | null>(null);
 
     useEffect(()=>{
         async function fetchKeyCollections(){
@@ -47,24 +48,6 @@ export default function KeyCollections({ session }:{
         })
     }
 
-    const handleBuyPrice = async (address: string, amount: number) : Promise<number>=>{
-        try{
-            const buyPriceOfKeys = await getBuyPrice(address, amount)
-            return buyPriceOfKeys 
-        }catch(error){
-            return 0;
-        }
-    }
-
-    const handleBuyPriceAfterFees = async (address: string, amount: number) : Promise<number> => {
-        try{
-            const buyPriceOfKeysAfterFees = await getBuyPriceAfterFees(address, amount)
-            return buyPriceOfKeysAfterFees
-        }catch(error){
-            return 0;
-        }
-    }
-
     const changeKeyCollection = async (event: ChangeEvent<HTMLInputElement>) =>{
         if(event.target?.value === ''){
             const keys = await getKeySubjects(session.user)
@@ -94,35 +77,37 @@ export default function KeyCollections({ session }:{
                             <p className="w-[30%] text-center">{key.address.slice(0,20)}...{key.address.slice(-4)}</p>
                             <div className="w-[10%] text-center">
                                 <button onClick={()=>{
-                                            setBuyModalOpen(!buyModalOpen)
+                                            console.log("Hi!")
+                                            setBuyModalOpenIndex(index)
                                         }
                                     } className="rounded-full p-1 bg-green-500 text-white">Buy Keys</button>
-                                    {
-                                        buyModalOpen ? <Modal title="Buy Keys" isOpen={buyModalOpen} onClose={()=>{
-                                            setBuyModalOpen(!buyModalOpen)
-                                        }}>
-                                            <div className="w-full flex flex-col justify-center">
-                                                <div className="flex">
-                                                    <h2 className="text-lg w-1/2 text-left">Key Address : </h2>
-                                                    <h1 className="w-1/2">{key.address.slice(0,4)}...{key.address.slice(-4)}</h1>
-                                                </div>
-                                                <div className="flex">
-                                                    <h2 className="text-lg w-1/2 text-left">Buy Price of Keys : </h2>
-                                                    <h1 className="w-1/2">{handleBuyPrice(key.address, key.keys)}</h1>
-                                                </div>
-                                                <div className="flex">
-                                                    <h2 className="text-lg w-1/2 text-left">Buy Price of Keys (After Fees) : </h2>
-                                                    <h1 className="w-1/2">{handleBuyPriceAfterFees(key.address, key.keys)}</h1>
-                                                </div>
-                                                <div>
-                                                    <button className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Buy Keys</button>
-                                                </div>
-                                            </div>
-                                        </Modal>:null
-                                    }
                             </div>
                         </div>
                     })
+                }
+
+                {
+                   buyModalOpenIndex !== null && buyModalOpenIndex !== -1 ? <Modal title="Buy Keys" isOpen={true} onClose={()=>{
+                        setBuyModalOpenIndex(-1)
+                    }}>
+                        <div className="w-full flex flex-col justify-center">
+                            <div className="flex">
+                                <h2 className="text-lg w-1/2 text-left">Key Address : </h2>
+                                <h1 className="w-1/2">{keyCollections[buyModalOpenIndex].address.slice(0,4)}...{keyCollections[buyModalOpenIndex].address.slice(-4)}</h1>
+                            </div>
+                            <div className="flex">
+                                <h2 className="text-lg w-1/2 text-left">Buy Price of Keys : </h2>
+                                <h1 className="w-1/2">{handleBuyPrice(keyCollections[buyModalOpenIndex].address, keyCollections[buyModalOpenIndex].keys)}</h1>
+                            </div>
+                            <div className="flex">
+                                <h2 className="text-lg w-1/2 text-left">Buy Price of Keys (After Fees) : </h2>
+                                <h1 className="w-1/2">{handleBuyPriceAfterFees(keyCollections[buyModalOpenIndex].address, keyCollections[buyModalOpenIndex].keys)}</h1>
+                            </div>
+                            <div>
+                                <button className="bg-green-500 mt-5 p-2 w-fit text-white text-md rounded-full">Buy Keys</button>
+                            </div>
+                        </div>
+                    </Modal>:null
                 }
             </div>
         </>
