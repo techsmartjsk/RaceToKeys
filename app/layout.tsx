@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { getServerAuthSession } from '@/authentication/auth'
 import { Poppins } from 'next/font/google'
-import { Homepage } from '@/components/home/homepage'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Protected } from "@/components/common/protected";

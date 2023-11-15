@@ -35,6 +35,12 @@ export type ContractTradeEvent = {
   }
 }
 
+export type Collection = {
+  address: string;
+  keys:number
+}
+
+
 export type ContractGetOwnedCollectionsResponse = [
   string[], 
   number[]
