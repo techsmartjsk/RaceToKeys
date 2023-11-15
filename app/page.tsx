@@ -1,8 +1,8 @@
-import Home from "@/pages/home";
+import Homepage from "@/pages/home";
 
-export default function Page() {
+export default function Home() {
   return (
-    <Home/>
+    <Homepage/>
   )
 }
 

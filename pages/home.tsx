@@ -7,7 +7,7 @@ import { Header } from "../components/navbar/header";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/authentication/auth";
 
-const Home = async () => {
+const Homepage = async () => {
     const session = await getServerSession(authOptions)
     if(session){
         return (
@@ -25,4 +25,4 @@ const Home = async () => {
     }
 };
 
-export default Home;
+export default Homepage;
