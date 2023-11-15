@@ -1,5 +1,5 @@
 import TradeHistory from "./trade.history";
-import { UserTradingHistory } from "./user.trading.history";
+import UserTradingHistory from "./user.trading.history";
 import KeyCollections from "./key.collections";
 import ProtocolInformation from "./protocol.info";
 import UserKeys from "./user.keys";

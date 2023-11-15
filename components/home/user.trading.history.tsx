@@ -1,18 +1,71 @@
-import { getTradeHistory } from "@/lib/contract"
-import { Session } from "@/lib/types";
+"use client"
 
-export async function UserTradingHistory({ session }: {
+import { getTradeHistory } from "@/lib/contract"
+import { ContractTradeEvent, Session } from "@/lib/types";
+import { useEffect, useState } from "react";
+
+export default function UserTradingHistory({ session }: {
     session: Session
 }){
-    const tradeHistory = await getTradeHistory()
+
+    useEffect(()=>{
+        async function fetchData(){
+            const tradeHistory = await getTradeHistory()
+            setTradeHistory(tradeHistory)
+        }
+        fetchData()
+    },[])
+
+    const [tradeHistory, setTradeHistory] = useState<ContractTradeEvent[]>([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const userTradeHistory = tradeHistory.filter(trade => {
         return trade.data.trader === session.user.address;
     });
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentUserTradeHistory = tradeHistory
+        .filter((trade) => trade.data.trader === session.user.address)
+        .slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(
+        userTradeHistory.length / itemsPerPage
+    );
+
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
     return(
         <>
             <h1 className="text-xl mt-20">Recent User Trade History</h1>
-            <div className="rounded-md w-full shadow-md p-5 mt-10">
-                <div className="flex gap-10 border-b-[0.5px] border-black p-2">
+            <div className="rounded-md flex flex-col w-full shadow-md p-5 mt-10">
+                <div className="ml-auto">
+                    <nav className="flex gap-5 items-center border-[1px] bg-blue-500 text-white p-2">
+                        <p>Page</p>
+                        <select
+                            value={currentPage}
+                            onChange={(event) => {
+                            handlePageChange(Number(event.target.value));
+                            }}
+                            className="pagination bg-blue-500 text-white focus:outline-none hover:outline-none"
+                        >
+                            {Array.from({ length: totalPages }).map((_, index) => (
+                            <option
+                                value={index + 1}
+                                key={index}
+                                className={`page-item ${
+                                index + 1 === currentPage ? "active" : ""
+                                }`}
+                            >
+                                {index + 1}
+                            </option>
+                            ))}
+                        </select>
+                        <p>of {totalPages}</p>
+                    </nav>
+                </div>
+                <div className="flex gap-10 border-b-[0.5px] border-black p-2 mt-5">
                     <p className="w-[20%]">Sequence Number</p>
                     <p className="w-[10%]">Subject</p>
                     <p className="w-[10%]">Trader</p>
@@ -21,7 +74,7 @@ export async function UserTradingHistory({ session }: {
                     <p className="w-[20%] text-center">Purchase Amount</p>
                 </div>
                 {
-                    userTradeHistory.map((trade,index)=>{
+                    currentUserTradeHistory.map((trade,index)=>{
                         return <div key={index} className="flex gap-10 p-2 border-b-[0.5px] cursor-pointer hover:shadow-lg">
                         <p className="w-[20%]">{trade.sequence_number}</p>
                         <p className="w-[10%]">{trade.data.subject.slice(0,4)}...{trade.data.subject.slice(-4)}</p>

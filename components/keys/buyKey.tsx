@@ -38,13 +38,13 @@ const BuyKeys = async ({
 
     return(
     <div>
-        <div className='flex gap-5'>
+        <div className='flex gap-5 items-center'>
             <p className="w-1/2 font-semibold text-left">Select Key Holder : </p>
             <select defaultValue={keyHolders[0].address} value={
                 selectedAddress === '' ? keyHolders[0].address : selectedAddress 
             } onChange={(event)=>{
                 setSelectedAddress(event.target.value)
-            }} className="p-2 rounded-md w-1/2">
+            }} className="p-2 rounded-md w-1/2 border-[1px]">
                 {
                     keyHolders.map((keyHolder, index)=>{
                         return <option key={index} value={keyHolder.address}>{keyHolder.address.slice(0,4)}...{keyHolder.address.slice(-4)}</option>

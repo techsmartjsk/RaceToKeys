@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
   return (
       <div className="fixed inset-0 z-10 flex items-center justify-center">
-        <div className="modal-container z-50 bg-white w-[600px] h-[250px] p-4 rounded shadow-lg">
+        <div className="modal-container z-50 bg-white w-[600px] h-[350px] p-4 rounded shadow-lg">
           <div className="modal-header flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-center">{title}</h3>
             <button
@@ -29,7 +29,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
             </button>
           </div>
           <Suspense fallback={<ModalAnimation/>}>
-            <div className="modal-body w-full">{children}</div>
+            <div className="modal-body w-full">
+              {children}
+            </div>
           </Suspense>
         </div>
       </div>
