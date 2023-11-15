@@ -1,4 +1,4 @@
-import { getKeyBalance, getKeyHolders } from '@/lib/contract';
+import { getKeyBalance, getKeyHolders, getKeySupply } from '@/lib/contract';
 import { Session, User } from '@/lib/types';
 import { handleBuyKeys, handleBuyPrice, handleBuyPriceAfterFees } from '@/server/actions';
 import { toast } from 'react-toastify';
@@ -26,11 +26,14 @@ const BuyKeys = async ({
 }) =>{
     const keyHolders = await getKeyHolders(keySubjectAddress)
     let keys;
+    let keysCurrentValue;
 
     if(selectedAddress === ''){
-        keys = await getKeyBalance(keyHolders[0].address,keySubjectAddress)
+        keys = await getKeySupply(keySubjectAddress)
+        keysCurrentValue = await getKeyBalance(keyHolders[0].address,keySubjectAddress)
     }else{
-        keys = await getKeyBalance(selectedAddress,keySubjectAddress)
+        keys = await getKeySupply(keySubjectAddress)
+        keysCurrentValue = await getKeyBalance(selectedAddress,keySubjectAddress)
     }
 
     return(
@@ -50,8 +53,8 @@ const BuyKeys = async ({
             </select>
         </div>
         <div className='flex gap-5'>
-            <p className="w-1/2 font-semibold text-left">Number of Keys : </p>
-            <p>{keys}</p>
+            <p className="w-1/2 font-semibold text-left">Key Holder Current Value : </p>
+            <p>{keysCurrentValue}</p>
         </div>
         <div className='flex gap-5'>
             <p className="w-1/2 font-semibold text-left">Keys to buy : </p>
