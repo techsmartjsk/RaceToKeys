@@ -1,5 +1,5 @@
-import { getKeyBalance, getKeyHolders, getKeySupply } from '@/lib/contract';
-import { Session, User } from '@/lib/types';
+import { getKeySupply } from '@/lib/contract';
+import { User } from '@/lib/types';
 import { handleBuyKeys, handleBuyPrice, handleBuyPriceAfterFees } from '@/server/actions';
 import { ChangeEvent } from 'react';
 import { toast } from 'react-toastify';
@@ -7,20 +7,12 @@ import { toast } from 'react-toastify';
 const BuyKeys = async ({
     user,
     keySubjectAddress,
-    selectedAddress,
-    setSelectedAddress,
-    keysHolded,
-    setKeysHolded,
     keysToBuy,
     setKeysToBuy,
     setBuyModalOpenIndex
 }:{
     user: User,
     keySubjectAddress: string,
-    selectedAddress: string,
-    setSelectedAddress: React.Dispatch<React.SetStateAction<string>>,
-    keysHolded: number,
-    setKeysHolded:React.Dispatch<React.SetStateAction<number>>,
     keysToBuy: string,
     setKeysToBuy: React.Dispatch<React.SetStateAction<string>>,
     setBuyModalOpenIndex:React.Dispatch<React.SetStateAction<number>>
@@ -70,6 +62,9 @@ const BuyKeys = async ({
                 handleBuyKeys(user,keySubjectAddress,Number(keysToBuy));
                 toast.success('Bought Keys!',{
                     position: toast.POSITION.BOTTOM_RIGHT
+                })
+                toast.warning('Reload the server to see updates!',{
+                    position: toast.POSITION.TOP_RIGHT
                 })
                 setBuyModalOpenIndex(-1)
             }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-full">Buy Keys</button>

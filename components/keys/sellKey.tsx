@@ -70,6 +70,9 @@ export default async function SellKey({
                         toast.success("Sold Keys",{
                             position: toast.POSITION.BOTTOM_RIGHT
                         })
+                        toast.warning('Reload the server to see updates!',{
+                            position: toast.POSITION.TOP_RIGHT
+                        })
                     }} className="bg-red-500 p-2 w-full py-2 px-5 text-white text-md rounded-full">Sell Keys</button>
                     :null
                 }

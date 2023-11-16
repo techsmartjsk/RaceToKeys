@@ -13,8 +13,6 @@ export default function KeyCollections({ session }:{
 }){
     const [keyCollections, setKeyCollections] = useState<Collection[]>([])
     const [buyModalOpenIndex, setBuyModalOpenIndex] = useState<number>(-1);
-    const [selectedAddress, setSelectedAddress] = useState<string>("");
-    const [keysHolded, setKeysHolded] = useState<number>(0)
     const [keysToBuy, setKeysToBuy] = useState<string>("")
 
     const itemsPerPage = 10; // Adjust the number of items per page as needed
@@ -132,10 +130,6 @@ export default function KeyCollections({ session }:{
                         <BuyKeys 
                         user={session.user}
                         keySubjectAddress={keyCollections[buyModalOpenIndex].address}
-                        selectedAddress={selectedAddress}
-                        setSelectedAddress={setSelectedAddress}
-                        keysHolded={keysHolded}
-                        setKeysHolded={setKeysHolded}
                         keysToBuy={keysToBuy}
                         setKeysToBuy={setKeysToBuy}
                         setBuyModalOpenIndex={setBuyModalOpenIndex}
