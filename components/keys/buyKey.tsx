@@ -24,63 +24,52 @@ const BuyKeys = async ({
     setKeysToBuy: React.Dispatch<React.SetStateAction<string>>,
     setBuyModalOpenIndex:React.Dispatch<React.SetStateAction<number>>
 }) =>{
-    const keyHolders = await getKeyHolders(keySubjectAddress)
     let keys;
-    let keysCurrentValue;
 
     if(selectedAddress === ''){
         keys = await getKeySupply(keySubjectAddress)
-        keysCurrentValue = await getKeyBalance(keyHolders[0].address,keySubjectAddress)
     }else{
         keys = await getKeySupply(keySubjectAddress)
-        keysCurrentValue = await getKeyBalance(selectedAddress,keySubjectAddress)
     }
 
+    async function knowBuyPrice(formData: FormData){
+        const amount = formData.get("keys")?.toString();
+        if(amount != null){
+            setKeysToBuy(amount)
+        }
+    }
     return(
-    <div>
-        <div className='flex gap-5 items-center'>
-            <p className="w-1/2 font-semibold text-left">Select Key Holder : </p>
-            <select defaultValue={keyHolders[0].address} value={
-                selectedAddress === '' ? keyHolders[0].address : selectedAddress 
-            } onChange={(event)=>{
-                setSelectedAddress(event.target.value)
-            }} className="p-2 rounded-md w-1/2 border-[1px]">
-                {
-                    keyHolders.map((keyHolder, index)=>{
-                        return <option key={index} value={keyHolder.address}>{keyHolder.address.slice(0,4)}...{keyHolder.address.slice(-4)}</option>
-                    })
-                }
-            </select>
+    <div className='flex gap-5 flex-col'>
+        <div className='flex gap-5'>
+            <p className="w-1/2  text-left">Key Supply : </p>
+            <p className="w-1/2">{keys}</p>
+        </div>
+        <div className='flex flex-col gap-2'>
+            <p>Keys to buy : </p>
+            <form action={knowBuyPrice} className="flex flex-col gap-2">
+                <input name="keys" type="number" className="rounded-md bg-gray-200 h-[30px] w-full  p-2 border-[0.5px]" placeholder='Enter Keys to Buy'></input>
+                <button className="text-white p-1 w-fit text-md bg-green-500 rounded-full">Get Price</button>
+            </form>
         </div>
         <div className='flex gap-5'>
-            <p className="w-1/2 font-semibold text-left">Key Holder Current Value : </p>
-            <p>{keysCurrentValue}</p>
+            <div className="w-1/2">
+                <p>Price of Keys : </p>
+                <div className='bg-gray-200 rounded-md p-2'>{handleBuyPrice(keySubjectAddress, Number(keysToBuy))} APT</div>
+            </div>
+            <div className="w-1/2">
+                <p>Price of Keys(After Fees) : </p>
+                <div className='bg-gray-200 rounded-md p-2'>{handleBuyPriceAfterFees(keySubjectAddress, Number(keysToBuy))} APT</div>
+            </div>
         </div>
-        <div className='flex gap-5'>
-            <p className="w-1/2 font-semibold text-left">Key Supply : </p>
-            <p>{keys}</p>
-        </div>
-        <div className='flex gap-5'>
-            <p className="w-1/2 font-semibold text-left">Keys to buy : </p>
-            <input type="number" value={keysToBuy} onChange={(event)=>{
-                setKeysToBuy(event.target.value)
-            }} className="rounded-full border-[0.5px]" placeholder='Enter Keys to Buy'></input>
-        </div>
-        <div className='flex gap-5'>
-            <p className="w-1/2 font-semibold text-left">Price of Keys : </p>
-            <p>{handleBuyPrice(keySubjectAddress, Number(keysToBuy))}</p>
-        </div>
-        <div className='flex gap-5'>
-            <p className="w-1/2 font-semibold text-left">Price of Keys(After Fees) : </p>
-            <p>{handleBuyPriceAfterFees(keySubjectAddress, Number(keysToBuy))}</p>
-        </div>
-        <button onClick={()=>{
+        {
+            (Number(keysToBuy) > 0 && keysToBuy != '') && <button onClick={()=>{
                 handleBuyKeys(user,keySubjectAddress,Number(keysToBuy));
                 toast.success('Bought Keys!',{
                     position: toast.POSITION.BOTTOM_RIGHT
                 })
                 setBuyModalOpenIndex(-1)
             }} className="w-full py-2 px-5 w-full bg-green-500 text-white text-md rounded-full">Buy Keys</button>
+        }
     </div>
     )
 }

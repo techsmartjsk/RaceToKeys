@@ -18,12 +18,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
   return (
       <div className="fixed inset-0 z-10 flex items-center justify-center">
-        <div className="modal-container z-50 bg-white w-[600px] h-[350px] p-4 rounded shadow-lg">
+        <div className="modal-container z-50 bg-white w-[600px] h-[380px] p-4 rounded shadow-lg">
           <div className="modal-header flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-center">{title}</h3>
             <button
               onClick={onClose}
-              className="text-gray-500 text-3xl cursor-pointer hover:text-gray-700 focus:outline-none"
+              className="text-gray-500 text-3xl bg-red-500 rounded-full h-[30px] w-[30px] flex items-center justify-center z-60  text-white cursor-pointer hover:text-gray-700 focus:outline-none"
             >
               &times;
             </button>

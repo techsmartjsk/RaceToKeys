@@ -2,11 +2,12 @@
 
 import Image from "next/image"
 import { useState, useEffect, Suspense } from "react";
-import { getKeyBalance, getKeySupply, getOwnedCollections } from "@/lib/contract";
+import { getKeySupply, getOwnedCollections } from "@/lib/contract";
 import { Collection, Session } from "@/lib/types";
 import Modal from "../common/modal";
 import ModalAnimation from "../common/modal.animation";
 import SellKey from "../keys/sellKey";
+import { handleKeyHolders } from "@/server/actions";
 
 export default function UserKeys({ session }:{
     session: Session
@@ -50,8 +51,8 @@ export default function UserKeys({ session }:{
                         <p className="w-[10%] text-center">Serial Number</p>
                         <p className="w-[30%] text-center">Address</p>
                         <p className="w-[10%] text-center">Keys</p>
-                        <p className="w-[10%] text-center">Key Balance</p>
                         <p className="w-[10%] text-center">Key Supply</p>
+                        <p className="w-[10%] text-center">Key Holders</p>
                         <p className="w-[10%] text-center">Sell</p>
                     </div>
                     {
@@ -64,8 +65,10 @@ export default function UserKeys({ session }:{
                                         key.keys > 1 ? ' Keys':' Key'
                                     }
                                 </p>
-                                <p className="w-[10%] text-center">{getKeyBalance(session.user.address, key.address)}</p>
                                 <p className="w-[10%] text-center">{getKeySupply(key.address)}</p>
+                                <div className="w-[10%]">
+                                    
+                                </div>
                                 <div className="w-[10%] text-center">
                                     {
                                         key.keys > 0 ? 

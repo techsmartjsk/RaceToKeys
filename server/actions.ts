@@ -1,5 +1,5 @@
-import { buyKeys, getBuyPrice, getBuyPriceAfterFees, getSellPrice, getSellPriceAfterFees, sellKeys } from "@/lib/contract";
-import { User } from '@/lib/types';
+import { buyKeys, getBuyPrice, getBuyPriceAfterFees, getKeyHolders, getSellPrice, getSellPriceAfterFees, sellKeys } from "@/lib/contract";
+import { Collection, User } from '@/lib/types';
 
 
 export const handleSellPrice = async (address: string, amount: number) : Promise<number> =>{
@@ -45,4 +45,14 @@ export const handleBuyKeys = async (buyer: User, keySubjectAddress: string, amou
 
 export const handleSellKeys = async (seller: User, keySubjectAddress: string, amount: number) : Promise<void> =>{
     await sellKeys(seller,keySubjectAddress,amount)
+}
+
+export const handleKeyHolders = async (keySubjectAddress: string): Promise<Collection[]> => {
+    try{
+        const keyHolders = await getKeyHolders(keySubjectAddress)
+        return keyHolders
+    }catch(error){
+        console.log(error)
+        return []
+    }
 }
