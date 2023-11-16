@@ -7,7 +7,6 @@ import { Collection, Session } from "@/lib/types";
 import Modal from "../common/modal";
 import ModalAnimation from "../common/modal.animation";
 import SellKey from "../keys/sellKey";
-import { handleKeyHolders } from "@/server/actions";
 
 export default function UserKeys({ session }:{
     session: Session
@@ -76,6 +75,7 @@ export default function UserKeys({ session }:{
                                             {
                                                 sellModalOpenIndex != -1 ? <Modal title="Sell Keys" isOpen={true} onClose={()=>{
                                                     setSellModalOpenIndex(-1)
+                                                    setKeysToSell('')
                                                 }}>
                                                     <SellKey 
                                                     user={session.user}

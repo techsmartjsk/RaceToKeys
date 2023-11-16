@@ -1,6 +1,7 @@
 import { getKeyBalance, getKeyHolders, getKeySupply } from '@/lib/contract';
 import { Session, User } from '@/lib/types';
 import { handleBuyKeys, handleBuyPrice, handleBuyPriceAfterFees } from '@/server/actions';
+import { ChangeEvent } from 'react';
 import { toast } from 'react-toastify';
 
 const BuyKeys = async ({
@@ -24,20 +25,21 @@ const BuyKeys = async ({
     setKeysToBuy: React.Dispatch<React.SetStateAction<string>>,
     setBuyModalOpenIndex:React.Dispatch<React.SetStateAction<number>>
 }) =>{
-    let keys;
-
-    if(selectedAddress === ''){
-        keys = await getKeySupply(keySubjectAddress)
-    }else{
-        keys = await getKeySupply(keySubjectAddress)
-    }
-
+    
+    const keys = await getKeySupply(keySubjectAddress)
     async function knowBuyPrice(formData: FormData){
         const amount = formData.get("keys")?.toString();
         if(amount != null){
             setKeysToBuy(amount)
         }
     }
+
+    const handlePriceValue = (amount: string) => {
+        if(amount === ''){
+            setKeysToBuy('')
+        }
+    }
+
     return(
     <div className='flex gap-5 flex-col'>
         <div className='flex gap-5'>
@@ -47,7 +49,9 @@ const BuyKeys = async ({
         <div className='flex flex-col gap-2'>
             <p>Keys to buy : </p>
             <form action={knowBuyPrice} className="flex flex-col gap-2">
-                <input name="keys" type="number" className="rounded-md bg-gray-200 h-[30px] w-full  p-2 border-[0.5px]" placeholder='Enter Keys to Buy'></input>
+                <input name="keys" type="number" onChange={(event)=>{
+                    handlePriceValue(event.target.value)
+                }} className="rounded-md bg-gray-200 h-[30px] w-full  p-2 border-[0.5px]" placeholder='Enter Keys to Buy'></input>
                 <button className="text-white p-1 w-fit text-md bg-green-500 rounded-full">Get Price</button>
             </form>
         </div>

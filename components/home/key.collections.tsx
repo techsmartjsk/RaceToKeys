@@ -127,6 +127,7 @@ export default function KeyCollections({ session }:{
                 {
                    buyModalOpenIndex !== null && buyModalOpenIndex !== -1 ? <Modal title="Buy Keys" isOpen={true} onClose={()=>{
                         setBuyModalOpenIndex(-1)
+                        setKeysToBuy('')
                     }}>
                         <BuyKeys 
                         user={session.user}
