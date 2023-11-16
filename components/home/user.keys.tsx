@@ -52,7 +52,6 @@ export default function UserKeys({ session }:{
                         <p className="w-[30%] text-center">Address</p>
                         <p className="w-[10%] text-center">Keys</p>
                         <p className="w-[10%] text-center">Key Supply</p>
-                        <p className="w-[10%] text-center">Key Holders</p>
                         <p className="w-[10%] text-center">Sell</p>
                     </div>
                     {
@@ -66,9 +65,6 @@ export default function UserKeys({ session }:{
                                     }
                                 </p>
                                 <p className="w-[10%] text-center">{getKeySupply(key.address)}</p>
-                                <div className="w-[10%]">
-                                    
-                                </div>
                                 <div className="w-[10%] text-center">
                                     {
                                         key.keys > 0 ? 

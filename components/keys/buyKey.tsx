@@ -54,11 +54,11 @@ const BuyKeys = async ({
         <div className='flex gap-5'>
             <div className="w-1/2">
                 <p>Price of Keys : </p>
-                <div className='bg-gray-200 rounded-md p-2'>{handleBuyPrice(keySubjectAddress, Number(keysToBuy))} APT</div>
+                <div className='bg-gray-200 rounded-md p-2'>{(Number(keysToBuy) > 0 && keysToBuy != '') ? handleBuyPrice(keySubjectAddress, Number(keysToBuy)) : '0'} APT</div>
             </div>
             <div className="w-1/2">
                 <p>Price of Keys(After Fees) : </p>
-                <div className='bg-gray-200 rounded-md p-2'>{handleBuyPriceAfterFees(keySubjectAddress, Number(keysToBuy))} APT</div>
+                <div className='bg-gray-200 rounded-md p-2'>{(Number(keysToBuy) > 0 && keysToBuy != '') ? handleBuyPriceAfterFees(keySubjectAddress, Number(keysToBuy)) : '0'} APT</div>
             </div>
         </div>
         {
