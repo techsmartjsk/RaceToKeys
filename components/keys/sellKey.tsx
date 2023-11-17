@@ -1,4 +1,4 @@
-import { getKeySupply } from "@/lib/contract"
+
 import { User } from "@/lib/types"
 import { handleSellKeys, handleSellPrice, handleSellPriceAfterFees } from "@/server/actions"
 import { toast } from "react-toastify"
@@ -8,13 +8,15 @@ export default async function SellKey({
     keySubjectAddress,
     setSellModalOpenIndex,
     keysToSell,
-    setKeysToSell
+    setKeysToSell, 
+    keyBalance
 }:{
     user: User,
     keySubjectAddress: string,
     setSellModalOpenIndex:React.Dispatch<React.SetStateAction<number>>,
     keysToSell: string,
-    setKeysToSell: React.Dispatch<React.SetStateAction<string>>
+    setKeysToSell: React.Dispatch<React.SetStateAction<string>>,
+    keyBalance: number
 }){
     async function knowSellPrice(formData: FormData){
         const amount = formData.get("keys")?.toString();

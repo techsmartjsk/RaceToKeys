@@ -1,4 +1,4 @@
-import { buyKeys, getBuyPrice, getBuyPriceAfterFees, getKeyHolders, getSellPrice, getSellPriceAfterFees, sellKeys } from "@/lib/contract";
+import { buyKeys, getBuyPrice, getBuyPriceAfterFees, getKeyHolders, getKeySupply, getSellPrice, getSellPriceAfterFees, sellKeys } from "@/lib/contract";
 import { Collection, User } from '@/lib/types';
 
 
@@ -54,5 +54,14 @@ export const handleKeyHolders = async (keySubjectAddress: string): Promise<Colle
     }catch(error){
         console.log(error)
         return []
+    }
+}
+
+export const handleKeySupply = async (keySubjectAddress: string) => {
+    try{
+        const keySupply = await getKeySupply(keySubjectAddress);
+        return keySupply
+    }catch(error){
+        return 0;
     }
 }

@@ -23,7 +23,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
             <h3 className="text-xl font-semibold text-center">{title}</h3>
             <button
               onClick={onClose}
-              className="text-gray-500 text-3xl bg-red-500 rounded-full h-[30px] w-[30px] flex items-center justify-center z-60  text-white cursor-pointer hover:text-gray-700 focus:outline-none"
+              className="text-gray-500 text-3xl bg-red-500 rounded-full h-[30px] w-[30px] flex items-center justify-center z-60  text-white cursor-pointer focus:outline-none"
             >
               &times;
             </button>
